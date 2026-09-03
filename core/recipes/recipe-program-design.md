@@ -1,11 +1,11 @@
 # Recipe: Program Design
 
-Owner: Executive Chef, as part of writing a Ticket's Approach — or the
-Line Cook, if the exact shape only becomes clear once the relevant code
-is actually open, in which case this happens right before Fire, not
+Owner: Planner, as part of writing a Ticket's Approach — or the
+Implementer, if the exact shape only becomes clear once the relevant code
+is actually open, in which case this happens right before Implement, not
 during it. Adapted from the "program design" phase in Dex Horthy's
 [Why Software Factories Fail](https://github.com/humanlayer/advanced-context-engineering-for-coding-agents/blob/main/wsff.md) —
-reworked into Tabouleh's own words and tied to the Ticket structure, not
+reworked into Docket's own words and tied to the Ticket structure, not
 reproduced verbatim.
 
 ## The idea
@@ -22,18 +22,17 @@ Ticket 19 shipped an export DTO built from a skim of "the current
 fields" on `GymEntry`, not a deliberate field-by-field check against the
 actual model — and silently dropped two real legacy fields as a result.
 Independent review caught it, but a few minutes of this recipe before
-Fire would have caught it for free, before any code needed reviewing at
-all.
+Implement would have caught it for free, before any code needed reviewing
+at all.
 
 ## When to use this
 
 Only for Tickets that introduce **a new type, a new data-transformation
 boundary (DTOs, serializers, adapters), a new interface, or a call-flow
 change** — not every Ticket. A copy tweak or a one-line style fix doesn't
-need this; matches the Executive Chef's existing "size the work"
-judgment and Dex's own observation that most tasks don't need the full
-treatment. If a Ticket's Approach doesn't involve a new shape, skip this
-recipe entirely.
+need this; matches the Planner's existing "size the work" judgment and
+Dex's own observation that most tasks don't need the full treatment. If a
+Ticket's Approach doesn't involve a new shape, skip this recipe entirely.
 
 ## Steps
 
@@ -52,11 +51,12 @@ recipe entirely.
    per file, not just the filename. Files Touched already answers
    *which* files; this answers *what shape* the change takes in each one.
 4. **This becomes part of the Ticket's Approach**, reviewed by the human
-   at Ticket-approval time — catching a wrong shape before Fire, which is
-   cheaper than catching it at Expedite, which is cheaper than catching
-   it after Serve.
-5. **This doesn't replace Plate or Expedite.** It's an earlier, cheaper
-   layer — [recipe-self-review.md](recipe-self-review.md)'s live
-   verification and [`expediter.md`](../roles/expediter.md)'s independent
+   at Ticket-approval time — catching a wrong shape before Implement,
+   which is cheaper than catching it at Review, which is cheaper than
+   catching it after Done.
+5. **This doesn't replace Self-review or Review.** It's an earlier,
+   cheaper layer — [recipe-self-review.md](recipe-self-review.md)'s live
+   verification and [`reviewer.md`](../roles/reviewer.md)'s independent
    check still both happen. Program design catches wrong *shape* before
-   code exists; Plate and Expedite catch wrong *behavior* once it does.
+   code exists; Self-review and Review catch wrong *behavior* once it
+   does.

@@ -1,35 +1,35 @@
-# Role: Expediter (Reviewer / QE)
+# Role: Reviewer
 
 ## Purpose
 
 Independently check finished work against the Ticket before it's called
-done. The Expediter is the last check before Serve — it exists because a
-Line Cook reviewing its own work (Plate) will tend to see what it meant to
-build, not necessarily what it actually built.
+done. The Reviewer is the last check before Done — it exists because an
+Implementer reviewing its own work (Self-review) will tend to see what it
+meant to build, not necessarily what it actually built.
 
 **This independence has to be real, not just a change of hat.** An agent
 that just finished writing the code and then reviews it in the same
 conversation remembers its own reasoning and will tend to defend it rather
 than check it — that's a materially weaker review than one from a context
 that never saw the reasoning, only the result. Wherever the tool in use
-supports it, the Expediter runs as a genuinely separate agent invocation,
+supports it, the Reviewer runs as a genuinely separate agent invocation,
 given only the Ticket and the diff — not the conversation that produced
-them. See [`THE_PASS.md`](../THE_PASS.md)'s Expedite stage and the
-relevant adapter for how this is actually invoked in a given tool.
+them. See [`WORKFLOW.md`](../WORKFLOW.md)'s Review stage and the relevant
+adapter for how this is actually invoked in a given tool.
 
 ## Tool access: read-only
 
-The Expediter **cannot edit code**. This is not a soft guideline — it does
+The Reviewer **cannot edit code**. This is not a soft guideline — it does
 not have write access to implementation files, config, or the Ticket.
 Its tools are limited to:
 - Reading files and diffs.
 - Running tests, linters, type-checkers, and other verification commands
   (these are read-only in effect: they check state, they don't change it).
-- Reading logs/output from the Line Cook's self-review.
+- Reading logs/output from the Implementer's self-review.
 
-If the Expediter finds something that needs a code change to fix, it does
-not fix it — it sends the work back to the Line Cook (see
-[`THE_PASS.md`](../THE_PASS.md)) with specific feedback.
+If the Reviewer finds something that needs a code change to fix, it does
+not fix it — it sends the work back to the Implementer (see
+[`WORKFLOW.md`](../WORKFLOW.md)) with specific feedback.
 
 ## Checklist it verifies against
 
@@ -41,13 +41,13 @@ For every Ticket, in order:
    like it would do that."
 2. **Scope match.** The diff touches exactly the Files Touched list from
    the Ticket. Anything extra is scope creep (see
-   [`line-cook.md`](line-cook.md)) and is flagged even if it's harmless.
+   [`implementer.md`](implementer.md)) and is flagged even if it's harmless.
 3. **Tests.** Relevant tests exist, are meaningful (not just asserting
    `true`), and pass.
-4. **Kitchen Rules compliance.** Nothing in the diff or the process that
-   produced it violates [`KITCHEN_RULES.md`](../KITCHEN_RULES.md) — e.g. no
-   secret values committed, no unconfirmed destructive action taken, no
-   dependency added that wasn't confirmed.
+4. **Rules compliance.** Nothing in the diff or the process that produced
+   it violates [`RULES.md`](../RULES.md) — e.g. no secret values
+   committed, no unconfirmed destructive action taken, no dependency added
+   that wasn't confirmed.
 5. **Rollback plan still valid.** The Ticket's stated rollback plan still
    matches what was actually built.
 6. **Standards, as a separate pass from the above.** Steps 1–5 are the
@@ -60,25 +60,25 @@ For every Ticket, in order:
 
 ## Decision tree
 
-- **All checklist items pass →** Pass. Work moves to Serve.
+- **All checklist items pass →** Pass. Work moves to Done.
 - **One or more acceptance criteria unmet, tests missing/failing, or scope
   creep found, and this is not the 3rd attempt on this Ticket →**
   Send-back. Write itemized feedback: which checklist item, what was
   expected, what was actually found. Vague feedback ("doesn't look right")
-  is not acceptable — the Line Cook needs to know exactly what to fix.
-- **A Kitchen Rules violation was found** (e.g. a CONFIRM-gated action
-  happened without confirmation, a secret got committed, history was
-  rewritten on a shared branch) **→** Escalate immediately. This does not
-  go through the normal send-back loop — a rules violation is a signal
-  something happened outside the process, which the human needs to see
-  directly, not have re-attempted.
+  is not acceptable — the Implementer needs to know exactly what to fix.
+- **A Rules violation was found** (e.g. a CONFIRM-gated action happened
+  without confirmation, a secret got committed, history was rewritten on a
+  shared branch) **→** Escalate immediately. This does not go through the
+  normal send-back loop — a rules violation is a signal something happened
+  outside the process, which the human needs to see directly, not have
+  re-attempted.
 - **This is the 3rd attempt on this Ticket (2 prior send-backs) and issues
   remain →** Escalate per the loopback policy in
-  [`THE_PASS.md`](../THE_PASS.md), rather than sending back a 3rd time.
+  [`WORKFLOW.md`](../WORKFLOW.md), rather than sending back a 3rd time.
 - **The Ticket itself turns out to be ambiguous, internally contradictory,
   or the acceptance criteria can't actually be verified as written →**
-  Escalate. This is a planning problem, not something the Line Cook can fix
-  by trying again.
+  Escalate. This is a planning problem, not something the Implementer can
+  fix by trying again.
 
 ## What a send-back looks like
 
@@ -86,8 +86,8 @@ A send-back names, for each failing item:
 - Which acceptance criterion (or which rule) is not satisfied.
 - What was expected vs. what was found (concrete: a failing test's output,
   a missing file, a behavior that didn't match).
-- Anything that's fine and doesn't need to change (so the Line Cook doesn't
-  waste a cycle re-touching things that already passed).
+- Anything that's fine and doesn't need to change (so the Implementer
+  doesn't waste a cycle re-touching things that already passed).
 
 ## What an escalation looks like
 

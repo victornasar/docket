@@ -1,7 +1,7 @@
 # Recipe: Writing a Ticket
 
-Owner: Executive Chef. Use this when turning a raw request into a Ticket
-via [`ticket.template.md`](../templates/ticket.template.md).
+Owner: Planner. Use this when turning a raw request into a Ticket via
+[`ticket.template.md`](../templates/ticket.template.md).
 
 ## Steps
 
@@ -18,25 +18,25 @@ via [`ticket.template.md`](../templates/ticket.template.md).
    don't hedge by trying to satisfy both. Ambiguity that only affects
    wording or minor details doesn't need a question.
 
-3. **Check Mise en Place.** If the project doesn't have a
-   [Mise en Place](../templates/mise-en-place.template.md) on file, or the
+3. **Check the Project Audit.** If the project doesn't have a
+   [Project Audit](../templates/project-audit.template.md) on file, or the
    request touches a part of the stack it doesn't cover, do that first.
    The Ticket's Approach section should be able to say "follows existing
    convention in X" rather than inventing a new pattern, when an existing
    one applies.
 
-4. **Write Approach as steps, not a paragraph.** A Line Cook should be able
-   to follow it without re-deriving the design. Name the specific
+4. **Write Approach as steps, not a paragraph.** An Implementer should be
+   able to follow it without re-deriving the design. Name the specific
    functions/modules/endpoints involved where known.
 
 5. **Files Touched is a real list.** Not "the payment module" — the actual
    file paths, to the extent they're known before implementation starts.
-   It's fine to be slightly approximate (a Line Cook may discover one more
-   file needs a one-line change), but it shouldn't be a guess at the level
-   of an entire directory when the change is small.
+   It's fine to be slightly approximate (an Implementer may discover one
+   more file needs a one-line change), but it shouldn't be a guess at the
+   level of an entire directory when the change is small.
 
 6. **Acceptance criteria are checkable, not descriptive.** Write them so
-   the Expediter can check each one and get a yes/no answer without
+   the Reviewer can check each one and get a yes/no answer without
    judgment calls.
    - Bad: "Retries work correctly."
    - Good: "A webhook that fails with a 5xx is retried up to 3 times with
@@ -45,17 +45,17 @@ via [`ticket.template.md`](../templates/ticket.template.md).
 
 7. **Rollback plan matches the risk.** For most code changes, "revert the
    commit" is sufficient — say so explicitly rather than leaving it blank.
-   For anything touching Kitchen Rules categories (migrations, production,
+   For anything touching Rules categories (migrations, production,
    dependencies), the rollback plan needs to be specific — see
    [`recipe-safe-migration.md`](recipe-safe-migration.md) for the
    migration case.
 
-8. **Run the approach past Kitchen Rules before presenting the Ticket.** If
+8. **Run the approach past the Rules before presenting the Ticket.** If
    the approach as written would require a BLOCKed action, redesign the
    approach — don't write a Ticket that will hit a wall mid-implementation.
 
 9. **Present for approval.** The Ticket isn't final until the human
-   approves it. Don't hand off to the Line Cook on an assumed yes.
+   approves it. Don't hand off to the Implementer on an assumed yes.
 
 ## Worked example
 

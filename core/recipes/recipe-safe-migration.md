@@ -1,8 +1,8 @@
 # Recipe: Safe Database Migration
 
-Owner: Line Cook (writing), subject to
-[`KITCHEN_RULES.md`](../KITCHEN_RULES.md) §4 (Database and migrations) for
-running it. Use this whenever a Ticket's approach involves a schema change.
+Owner: Implementer (writing), subject to [`RULES.md`](../RULES.md) §4
+(Database and migrations) for running it. Use this whenever a Ticket's
+approach involves a schema change.
 
 ## Steps
 
@@ -10,7 +10,7 @@ running it. Use this whenever a Ticket's approach involves a schema change.
    should appear in the Ticket's Approach and Files Touched, not be
    introduced mid-implementation. If a migration turns out to be necessary
    partway through a Ticket that didn't call for one, that's a Ticket
-   revision, not a silent addition — flag it back to the Executive Chef.
+   revision, not a silent addition — flag it back to the Planner.
 
 2. **Prefer additive, backward-compatible changes.** In order of
    preference:
@@ -21,7 +21,7 @@ running it. Use this whenever a Ticket's approach involves a schema change.
      the old name. Prefer *add new + backfill + remove old in a later,
      separate migration* over a straight rename.
    - Drop a column / drop a table / change a column's type in place → the
-     highest-risk category. Requires the CONFIRM step in Kitchen Rules §4
+     highest-risk category. Requires the CONFIRM step in Rules §4
      with the rollback plan stated explicitly, and should generally be
      split into "stop using it in code" (one Ticket) then "remove it" (a
      separate, later Ticket) rather than one atomic change.
@@ -42,14 +42,14 @@ running it. Use this whenever a Ticket's approach involves a schema change.
    in production, note whether the migration takes a lock, how long it's
    expected to run, and whether it needs to run online (e.g. via a
    tool/pattern the project already uses for zero-downtime migrations, per
-   Mise en Place).
+   the Project Audit).
 
 6. **Never run it against anything but a local/dev/throwaway database
-   without going through Kitchen Rules §4.** Writing and testing the
-   migration against a local database needs no confirmation. Running it
-   anywhere else — staging, production, any environment with real data —
-   is a CONFIRM at minimum, and running it against production specifically
-   is an ESCALATE first (see [`KITCHEN_RULES.md`](../KITCHEN_RULES.md) §4).
+   without going through Rules §4.** Writing and testing the migration
+   against a local database needs no confirmation. Running it anywhere
+   else — staging, production, any environment with real data — is a
+   CONFIRM at minimum, and running it against production specifically is
+   an ESCALATE first (see [`RULES.md`](../RULES.md) §4).
 
 7. **State environment explicitly when asking for confirmation.** "Run
    this migration" is not enough — say which database, what it does in one

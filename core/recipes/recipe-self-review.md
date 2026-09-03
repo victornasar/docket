@@ -1,8 +1,8 @@
-# Recipe: Self-Review (Plate)
+# Recipe: Self-Review
 
-Owner: Line Cook. Run this before handing work to the Expediter — it's the
-"Plate" stage in [`THE_PASS.md`](../THE_PASS.md). The goal is to catch what
-the Expediter would catch, so the Expediter's job is confirmation, not
+Owner: Implementer. Run this before handing work to the Reviewer — it's the
+Self-review stage in [`WORKFLOW.md`](../WORKFLOW.md). The goal is to catch
+what the Reviewer would catch, so the Reviewer's job is confirmation, not
 discovery.
 
 ## Steps
@@ -16,7 +16,7 @@ discovery.
    behavior, or read the specific code path — don't mark it done because
    the surrounding code "looks like it would handle that." If a criterion
    can't be checked without a manual step, do the manual step now, not
-   assume the Expediter will.
+   assume the Reviewer will.
 
 3. **Diff against Files Touched.** Run `git diff --stat` (or equivalent)
    and compare the file list against the Ticket's Files Touched. Anything
@@ -34,7 +34,7 @@ discovery.
 
 6. **Check secrets and config didn't leak in.** No credential values,
    tokens, or `.env` contents anywhere in the diff — see
-   [`KITCHEN_RULES.md`](../KITCHEN_RULES.md) §5.
+   [`RULES.md`](../RULES.md) §5.
 
 7. **Verify the rollback plan is still accurate.** If implementation
    diverged from the Ticket's original approach (e.g. touched one more
@@ -42,10 +42,10 @@ discovery.
    update the rollback plan to match what was actually built, not what was
    originally planned.
 
-8. **Write the handoff notes.** For the Expediter: which acceptance
+8. **Write the handoff notes.** For the Reviewer: which acceptance
    criteria were checked and how, test results, and any deviations from
    the original Ticket with a one-line justification for each. This isn't
-   busywork — it's what lets the Expediter verify efficiently instead of
+   busywork — it's what lets the Reviewer verify efficiently instead of
    re-deriving context from scratch.
 
 ## Self-review checklist (copy into handoff notes)
@@ -60,4 +60,4 @@ discovery.
       unfinished work.
 - [ ] No secret values anywhere in the diff.
 - [ ] Rollback plan updated to match what was actually built.
-- [ ] Handoff notes written for the Expediter.
+- [ ] Handoff notes written for the Reviewer.

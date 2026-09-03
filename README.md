@@ -1,96 +1,78 @@
-# Tabouleh
+# Docket
 
-Tabouleh is a portable, model-agnostic AI coding harness. It defines *how* an AI
-agent (or a small team of them) should work on a codebase — what it plans
-before it touches code, what it's forbidden from doing without asking, and
-how work gets checked before it's called done — independent of which AI tool
-or model you're using.
+Docket is an opinionated planning-and-review workflow you vendor into a
+Claude Code project: a Ticket you approve before any code is written, an
+independent review pass before anything is called done, and a procedure
+for improving the workflow itself from real incidents.
 
-It lives in its own repo and gets **attached** to other projects. It is not
-copy-pasted in. A project that wants Tabouleh symlinks or submodules this
-repo in, then generates a thin, tool-specific adapter file (a `CLAUDE.md`, a
-`.cursorrules`, etc.) that points back at it. Update Tabouleh once, and every
-attached project can pull the update.
+It's a small set of Markdown documents plus role definitions — nothing
+executes, there's no runtime. It lives in its own repo and is brought into
+a project (today by symlink or submodule; a vendored-copy model is
+planned), which then generates a thin adapter file — a `CLAUDE.md` — that
+points back at it.
 
-## Why a restaurant kitchen
+**On "works anywhere":** the `core/` documents are plain Markdown with no
+Claude-specific syntax, so porting the workflow to another tool is
+possible in principle. In practice only the Claude Code adapter is
+exercised. A Cursor adapter exists but is experimental and can't run the
+independent review pass as a genuinely separate context — it approximates
+it with a separate chat. "Portable" and "model-agnostic" are the
+aspiration, not a delivered feature.
 
-Software work done by an agent has the same failure mode as a kitchen with no
-structure: someone starts cooking before anyone agreed what's being made, food
-goes out without anyone checking it against the order, and when something's
-wrong nobody knows which step to blame. Professional kitchens solve this with
-a division of labor and a checkpoint before anything leaves the pass. Tabouleh
-borrows that structure because it maps cleanly onto what an AI coding agent
-actually needs: a planning step, an execution step, and an independent check —
-with explicit rules about what requires a human before it happens.
+## The mental model
 
-The restaurant terms are **labels for real mechanics**, not decoration. You
-should be able to read [`core/KITCHEN_RULES.md`](core/KITCHEN_RULES.md) and
-[`core/THE_PASS.md`](core/THE_PASS.md) with zero interest in the metaphor and
-still know exactly what happens at each step. Here's the mapping so the
-labels aren't a puzzle:
-
-| Kitchen term | What it actually is |
-|---|---|
-| **Kitchen Brigade** | The set of agent roles: Executive Chef, Line Cook, Expediter |
-| **Executive Chef** | The planner. Turns a request into a Ticket before any code is written. |
-| **Line Cook** | The implementer. Executes exactly what's on the Ticket. |
-| **Expediter** | The reviewer/QE. Read-only. Checks finished work against the Ticket before it's called done. |
-| **Ticket** | The spec/task file: problem, approach, files touched, acceptance criteria, rollback plan. |
-| **Mise en place** | The pre-work audit of a project: stack, conventions, risky areas, test setup. |
-| **Kitchen Rules** | The non-negotiable safety rules — what needs confirmation, what's flatly forbidden, what escalates. |
-| **Recipes** | Reusable step-by-step procedures for common tasks (e.g. "write a safe migration"). |
-| **The Pass** | The workflow and its handoff points between roles. |
-| **Walk-in** | The shared context/memory a project keeps (mise en place results, past tickets, conventions). |
-| **Fire it** | Execute an approved Ticket. |
+We borrowed the structure of a kitchen brigade: a planner turns a request
+into a Ticket, an implementer executes exactly that Ticket, an independent
+checker reviews the result against it, and there's a checkpoint before
+anything ships. The documents use plain terms — Planner, Implementer,
+Reviewer, Ticket, the workflow — the brigade is just where the shape came
+from.
 
 ## Quick start
 
-New to Tabouleh and want to attach it to a project right now? Go straight to
-[`setup/attach.md`](setup/attach.md) — it's a step-by-step walkthrough with a
+New to Docket and want to attach it to a project? Go to
+[`setup/attach.md`](setup/attach.md) — a step-by-step walkthrough with a
 copyable prompt.
 
 ## Repo map
 
 ```
-tabouleh/
+docket/
   core/
-    KITCHEN_RULES.md        Safety rules: confirm / block / escalate, by action
-    THE_PASS.md              The workflow: ticket -> fire -> plate -> expedite -> serve
-    PARALLEL_LINE.md          Opt-in: running multiple Tickets at once
-    LINE_MEETING.md           How a real weakness becomes a fix to core/
-    CHANGELOG.md              Log of every Line Meeting finding and its fix
-    roles/                   One file per brigade role
-    recipes/                 Reusable procedures for common tasks
-    templates/                Blank Ticket and Mise en Place formats
+    RULES.md            Safety rules: what Docket adds on top of the Claude Code baseline
+    WORKFLOW.md         The workflow: ticket -> implement -> self-review -> review -> done
+    LINE_MEETING.md     "Changing this kit": the core/ freeze, and how a change gets made
+    CHANGELOG.md        Log of every core/ change and the incident behind it
+    roles/              One file per role: planner, implementer, reviewer
+    recipes/            Reusable procedures (safe migration, TDD, diagnosis, ...)
+    templates/          Blank Ticket and Project Audit formats
+  advanced/
+    PARALLEL_LINE.md    Experimental: running multiple Tickets at once (unproven solo)
   adapters/
-    claude-code/             How Tabouleh maps into CLAUDE.md + .claude/agents/
-    cursor/                  How Tabouleh maps into .cursorrules
+    claude-code/        Reference adapter: CLAUDE.md + .claude/agents/
+    cursor/             Experimental adapter: .cursor rules, no true independent review
   setup/
-    attach.md                 How to wire Tabouleh into a new project
+    attach.md           How to wire Docket into a new project
 ```
 
 ## Reading order
 
-If you're evaluating Tabouleh or onboarding to a project that uses it, read
-in this order:
-
-1. This README (you're here)
-2. [`core/KITCHEN_RULES.md`](core/KITCHEN_RULES.md) — the rules that can't be
-   negotiated away regardless of task
-3. [`core/THE_PASS.md`](core/THE_PASS.md) — the workflow every piece of work
-   goes through
+1. This README
+2. [`core/RULES.md`](core/RULES.md) — the safety rules, and what they
+   assume the host already enforces
+3. [`core/WORKFLOW.md`](core/WORKFLOW.md) — the workflow every piece of
+   work goes through
 4. [`core/roles/`](core/roles/) — what each role does and doesn't do
-5. Whichever adapter matches your tool: [`adapters/claude-code/`](adapters/claude-code/)
-   or [`adapters/cursor/`](adapters/cursor/)
+5. [`adapters/claude-code/`](adapters/claude-code/) — the reference
+   adapter (or [`adapters/cursor/`](adapters/cursor/), experimental)
 
 ## Scope
 
-Tabouleh is a template/toolkit repo. It has no "production" deployment of its
-own, but its `core/` files are load-bearing for every project that attaches
-it — so changes here follow the same discipline described in
-[`core/KITCHEN_RULES.md`](core/KITCHEN_RULES.md), including confirmation
-before deleting or rewriting anything in `core/` or `adapters/`. When a real
-weakness in the harness itself turns up while working on an attached
-project, [`core/LINE_MEETING.md`](core/LINE_MEETING.md) is the actual
-procedure for proposing and logging the fix — not an ad hoc conversation
-each time.
+Docket is a template repo with no "production" of its own, but its
+`core/` files are load-bearing for every project that uses them. Changes
+to `core/` follow the discipline in [`core/RULES.md`](core/RULES.md)
+(confirmation before rewriting anything under `core/` or `adapters/`), and
+the structural spine is **frozen** — see
+[`core/LINE_MEETING.md`](core/LINE_MEETING.md) ("Changing this kit") for
+what that means and how a change gets made when a real incident justifies
+one.

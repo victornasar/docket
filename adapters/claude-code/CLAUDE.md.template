@@ -3,64 +3,63 @@ Generation template for a project's CLAUDE.md.
 
 How to use: copy this file to the project root as CLAUDE.md, then either
 (a) leave the @-references below as-is if Claude Code's context loading
-supports pulling in linked files from the attached tabouleh/ repo, or
-(b) inline the full contents of KITCHEN_RULES.md and THE_PASS.md in place
-of the reference lines, if the project prefers a fully self-contained
-CLAUDE.md that doesn't depend on the symlink/submodule being present at
-read time. Fill in every <PLACEHOLDER>. Delete this comment block once
-done.
+supports pulling in linked files from the attached docket/ repo, or
+(b) inline the full contents of RULES.md and WORKFLOW.md in place of the
+reference lines, if the project prefers a fully self-contained CLAUDE.md
+that doesn't depend on the symlink/submodule being present at read time.
+Fill in every <PLACEHOLDER>. Delete this comment block once done.
 -->
 
 # <PROJECT NAME> — CLAUDE.md
 
-This project uses Tabouleh, attached at `<TABOULEH_PATH>` (e.g.
-`./tabouleh` via symlink or submodule). This file is the entry point: it
-establishes the Kitchen Rules, the workflow (The Pass), and this project's
-specific Mise en Place.
+This project uses Docket, attached at `<DOCKET_PATH>` (e.g.
+`./docket` via symlink or submodule). This file is the entry point: it
+establishes the Rules, the workflow, and this project's specific Project
+Audit.
 
-## Kitchen Rules (non-negotiable)
+## Rules (non-negotiable)
 
-See `<TABOULEH_PATH>/core/KITCHEN_RULES.md` for the full, current version —
-treat it as authoritative and do not summarize around it. In short: every
-action falls into CONFIRM (ask first), BLOCK (never do it), or unrestricted.
+See `<DOCKET_PATH>/core/RULES.md` for the full, current version — treat
+it as authoritative and do not summarize around it. In short: every action
+falls into CONFIRM (ask first), BLOCK (never do it), or unrestricted.
 Destructive git operations, deletions, dependency changes, migrations,
 anything touching secrets or production, are gated — read the source file,
 don't rely on this summary for the actual rules.
 
-## Workflow (The Pass)
+## Workflow
 
-See `<TABOULEH_PATH>/core/THE_PASS.md` for the full workflow. In short:
-Ticket (planned and approved before code is written) → Fire (implement) →
-Plate (self-review) → Expedite (independent read-only check) → Serve
-(done). No code is written before a Ticket is approved.
+See `<DOCKET_PATH>/core/WORKFLOW.md` for the full workflow. In short:
+Ticket (planned and approved before code is written) → Implement → Self-review
+→ Review (independent read-only check) → Done. No code is written before a
+Ticket is approved.
 
 ## Roles
 
 This project uses three Claude Code agents, defined in `.claude/agents/`,
-sourced from `<TABOULEH_PATH>/core/roles/`:
+sourced from `<DOCKET_PATH>/core/roles/`:
 
-- **executive-chef** — planner, produces Tickets, no write access to code.
-- **line-cook** — implementer, scoped to the approved Ticket.
-- **expediter** — reviewer, read-only tools, checks work against the
-  Ticket before it's called done.
+- **planner** — produces Tickets, no write access to code.
+- **implementer** — scoped to the approved Ticket.
+- **reviewer** — read-only tools, checks work against the Ticket before
+  it's called done.
 
-**At Expedite, spawn the `expediter` subagent via the Agent tool — do not
+**At Review, spawn the `reviewer` subagent via the Agent tool — do not
 review the work in the same conversation that just implemented it.** Give
 it only the Ticket's file path and the diff against its baseline commit;
-it should not inherit the Fire/Plate conversation or reasoning. This is
-the actual mechanism behind "independent check" in `THE_PASS.md` — a
-same-context role switch is not a substitute for it.
+it should not inherit the Implement/Self-review conversation or reasoning.
+This is the actual mechanism behind "independent check" in `WORKFLOW.md` —
+a same-context role switch is not a substitute for it.
 
 Tickets are created under `<TICKETS_PATH>` (e.g. `./tickets/`) using
-`<TABOULEH_PATH>/core/templates/ticket.template.md`.
+`<DOCKET_PATH>/core/templates/ticket.template.md`.
 
-## Project Mise en Place
+## Project Audit
 
-<Paste the project's completed Mise en Place here, or reference it if kept
-as a separate file — e.g. "See MISE_EN_PLACE.md at project root." This
+<Paste the project's completed Project Audit here, or reference it if kept
+as a separate file — e.g. "See PROJECT_AUDIT.md at project root." This
 section is what makes this CLAUDE.md specific to this project rather than
-generic Tabouleh boilerplate: stack, conventions, test setup, risky areas,
-and any project-specific additions to Kitchen Rules.>
+generic Docket boilerplate: stack, conventions, test setup, risky areas,
+and any project-specific additions to the Rules.>
 
 ### Stack
 
@@ -86,6 +85,6 @@ and any project-specific additions to Kitchen Rules.>
 
 <PLACEHOLDER>
 
-### Project-specific Kitchen Rules additions (if any)
+### Project-specific Rules additions (if any)
 
-<PLACEHOLDER, or "None — universal Kitchen Rules apply as-is.">
+<PLACEHOLDER, or "None — universal Rules apply as-is.">

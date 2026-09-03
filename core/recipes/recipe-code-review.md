@@ -1,10 +1,10 @@
 # Recipe: Two-Axis Code Review
 
-Owner: Expediter, at Expedite. Also usable by the Line Cook as a second
-pass during Plate, after [recipe-self-review.md](recipe-self-review.md)'s
+Owner: Reviewer, at Review. Also usable by the Implementer as a second
+pass during Self-review, after [recipe-self-review.md](recipe-self-review.md)'s
 checklist. Adapted from the `code-review` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills) — reworked into
-Tabouleh's own words, not reproduced verbatim.
+Docket's own words, not reproduced verbatim.
 
 ## The idea
 
@@ -20,11 +20,12 @@ as two separate passes with two separate verdicts.
 
 1. **Pin the fixed point.** The diff being reviewed is everything since
    the Ticket's baseline commit — the same boundary
-   [`THE_PASS.md`](../THE_PASS.md) already uses for Plate. Nothing new
-   here, just stating it explicitly before starting two passes over it.
+   [`WORKFLOW.md`](../WORKFLOW.md) already uses for Self-review. Nothing
+   new here, just stating it explicitly before starting two passes over
+   it.
 
 2. **Spec axis: does it satisfy the Ticket?** This is
-   [`expediter.md`](../roles/expediter.md)'s existing checklist item
+   [`reviewer.md`](../roles/reviewer.md)'s existing checklist item
    one — walk the acceptance criteria individually, verify each one
    against actual behavior, not assumption. Nothing in this recipe
    replaces that; it's the first of the two axes.
@@ -32,7 +33,7 @@ as two separate passes with two separate verdicts.
 3. **Standards axis: is it well-crafted, independent of the Ticket?**
    Read the diff a second time, this time ignoring whether it matches the
    Ticket at all. Check it against:
-   - The project's own documented conventions (Mise en Place's
+   - The project's own documented conventions (the Project Audit's
      Conventions section) — these always win over the generic baseline
      below when they conflict.
    - Where conventions don't say, the smell baseline below — judgment
@@ -46,12 +47,12 @@ as two separate passes with two separate verdicts.
    useful outcome, not something to average into a single pass/fail.
 
 5. **Standards findings don't automatically send a Ticket back.** Per
-   [`THE_PASS.md`](../THE_PASS.md), a Spec miss or a Kitchen Rules
-   violation is what triggers a send-back or escalation. A Standards-axis
-   finding that isn't a rules violation and doesn't block correctness is
-   usually a candidate for its own future Ticket (note it, don't silently
-   fix it mid-review — see Line Cook's scope-creep boundary in
-   [`line-cook.md`](../roles/line-cook.md)), unless it's severe enough
+   [`WORKFLOW.md`](../WORKFLOW.md), a Spec miss or a Rules violation is
+   what triggers a send-back or escalation. A Standards-axis finding that
+   isn't a rules violation and doesn't block correctness is usually a
+   candidate for its own future Ticket (note it, don't silently fix it
+   mid-review — see the Implementer's scope-creep boundary in
+   [`implementer.md`](../roles/implementer.md)), unless it's severe enough
    that shipping it as-is would be irresponsible — in which case escalate
    rather than guess.
 
