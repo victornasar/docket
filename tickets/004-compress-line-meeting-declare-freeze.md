@@ -1,7 +1,7 @@
 # Ticket: Compress the Line Meeting and declare the `core/` freeze
 
-**Status:** draft
-**Owner (Implementer):**
+**Status:** done
+**Owner (Implementer):** Claude (this session)
 **Retry count:** 0
 **Related project Mise en Place:** N/A — Tabouleh's own repo
 **Worktree:** (blank)
@@ -101,4 +101,4 @@ Single commit. `git revert <sha>` restores the full 87-line
 
 ## Notes for the Reviewer
 
-<Filled during Self-review.>
+Reviewed in isolated context — PASS on all 5 acceptance criteria. Filename/heading mismatch (LINE_MEETING.md vs "Changing this kit") is ticket-sanctioned; README refs are ticket 005.
