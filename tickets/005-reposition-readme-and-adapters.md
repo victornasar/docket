@@ -1,7 +1,7 @@
 # Ticket: Reposition the README and rename vocabulary in `adapters/` + `setup/`
 
-**Status:** draft
-**Owner (Implementer):**
+**Status:** done
+**Owner (Implementer):** Claude (this session)
 **Retry count:** 0
 **Related project Mise en Place:** N/A — Tabouleh's own repo
 **Worktree:** (blank)
@@ -119,4 +119,4 @@ and the old vocabulary in `adapters/` and `setup/`.
 
 ## Notes for the Reviewer
 
-<Filled during Self-review.>
+Reviewed in isolated context — PASS on all 8 acceptance criteria. tickets/** still quote old terms (working docs, not shipped kit).
