@@ -1,7 +1,7 @@
 # Project Audit: <project name>
 
 <!--
-The pre-work audit of a project, done once when Tabouleh is attached and
+The pre-work audit of a project, done once when Docket is attached and
 updated whenever a Ticket touches an area this document doesn't yet cover.
 Referenced by every Ticket written for this project afterward — a Ticket's
 Approach should be able to say "follows existing convention documented

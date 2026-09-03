@@ -4,7 +4,7 @@ Owner: Reviewer, at Review. Also usable by the Implementer as a second
 pass during Self-review, after [recipe-self-review.md](recipe-self-review.md)'s
 checklist. Adapted from the `code-review` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills) — reworked into
-Tabouleh's own words, not reproduced verbatim.
+Docket's own words, not reproduced verbatim.
 
 ## The idea
 

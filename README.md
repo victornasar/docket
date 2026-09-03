@@ -1,6 +1,6 @@
-# Tabouleh
+# Docket
 
-Tabouleh is an opinionated planning-and-review workflow you vendor into a
+Docket is an opinionated planning-and-review workflow you vendor into a
 Claude Code project: a Ticket you approve before any code is written, an
 independent review pass before anything is called done, and a procedure
 for improving the workflow itself from real incidents.
@@ -30,16 +30,16 @@ from.
 
 ## Quick start
 
-New to Tabouleh and want to attach it to a project? Go to
+New to Docket and want to attach it to a project? Go to
 [`setup/attach.md`](setup/attach.md) — a step-by-step walkthrough with a
 copyable prompt.
 
 ## Repo map
 
 ```
-tabouleh/
+docket/
   core/
-    RULES.md            Safety rules: what Tabouleh adds on top of the Claude Code baseline
+    RULES.md            Safety rules: what Docket adds on top of the Claude Code baseline
     WORKFLOW.md         The workflow: ticket -> implement -> self-review -> review -> done
     LINE_MEETING.md     "Changing this kit": the core/ freeze, and how a change gets made
     CHANGELOG.md        Log of every core/ change and the incident behind it
@@ -52,7 +52,7 @@ tabouleh/
     claude-code/        Reference adapter: CLAUDE.md + .claude/agents/
     cursor/             Experimental adapter: .cursor rules, no true independent review
   setup/
-    attach.md           How to wire Tabouleh into a new project
+    attach.md           How to wire Docket into a new project
 ```
 
 ## Reading order
@@ -68,7 +68,7 @@ tabouleh/
 
 ## Scope
 
-Tabouleh is a template repo with no "production" of its own, but its
+Docket is a template repo with no "production" of its own, but its
 `core/` files are load-bearing for every project that uses them. Changes
 to `core/` follow the discipline in [`core/RULES.md`](core/RULES.md)
 (confirmation before rewriting anything under `core/` or `adapters/`), and

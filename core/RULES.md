@@ -1,7 +1,7 @@
 # Rules
 
 Applies to every role (Planner, Implementer, Reviewer) on every project
-Tabouleh is attached to. Not overridable by a Ticket, a user request, or a
+Docket is attached to. Not overridable by a Ticket, a user request, or a
 Recipe — if a Ticket conflicts with a rule, the rule wins and the conflict
 is escalated.
 
@@ -9,7 +9,7 @@ is escalated.
 boundary; the prohibited actions — credential values, permanent deletion,
 financial transactions; the permission-required actions — sending
 messages, publishing, purchases, accepting terms, changing account
-settings) and does not restate it. What follows is only what Tabouleh
+settings) and does not restate it. What follows is only what Docket
 **adds or tightens**. The experimental Cursor adapter can't assume the
 baseline and carries its own copy — see its adapter files.
 
@@ -38,15 +38,15 @@ ban on permanent deletion (trash, `rm -rf`):
 
 - Overwriting a file without having read its current contents first —
   **BLOCK**, everywhere, including this repo.
-- Deleting or rewriting any file under `tabouleh/core/` or
-  `tabouleh/adapters/` — **CONFIRM**; it's load-bearing for every attached
+- Deleting or rewriting any file under `docket/core/` or
+  `docket/adapters/` — **CONFIRM**; it's load-bearing for every attached
   project.
 - Removing a scratch file created during this Ticket's own work is fine —
   just log it in the handoff notes.
 
 ## 3. Dependencies, environment, and CI/CD
 
-The host is vague here; Tabouleh requires **CONFIRM** for: adding a
+The host is vague here; Docket requires **CONFIRM** for: adding a
 dependency not named on the Ticket (state package, version, why); removing
 or downgrading one (state what breaks); any project-wide lockfile
 `update`/`upgrade`; modifying CI/CD config; and changing env vars, `.env`

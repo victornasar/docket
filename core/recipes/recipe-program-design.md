@@ -5,7 +5,7 @@ Implementer, if the exact shape only becomes clear once the relevant code
 is actually open, in which case this happens right before Implement, not
 during it. Adapted from the "program design" phase in Dex Horthy's
 [Why Software Factories Fail](https://github.com/humanlayer/advanced-context-engineering-for-coding-agents/blob/main/wsff.md) —
-reworked into Tabouleh's own words and tied to the Ticket structure, not
+reworked into Docket's own words and tied to the Ticket structure, not
 reproduced verbatim.
 
 ## The idea

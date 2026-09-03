@@ -1,31 +1,31 @@
 <!--
 Generation template for a project's Cursor rules.
 
-How to use: save as .cursor/rules/tabouleh.mdc (preferred, keep the
+How to use: save as .cursor/rules/docket.mdc (preferred, keep the
 frontmatter below) or as a plain .cursorrules file at the project root
 (delete the frontmatter block in that case). Fill in every <PLACEHOLDER>.
 Delete this comment block once done.
 
 Note: the Cursor adapter is experimental. Cursor has no way to run the
 Review pass as a genuinely separate context — a fresh chat is the closest
-approximation. See <TABOULEH_PATH>/adapters/cursor/README.md.
+approximation. See <DOCKET_PATH>/adapters/cursor/README.md.
 
 If saving as .mdc, keep this frontmatter so the rules always apply:
 ---
-description: Tabouleh workflow and safety rules
+description: Docket workflow and safety rules
 alwaysApply: true
 ---
 -->
 
-# <PROJECT NAME> — Tabouleh Rules
+# <PROJECT NAME> — Docket Rules
 
-This project uses Tabouleh, attached at `<TABOULEH_PATH>` (e.g.
-`./tabouleh` via symlink or submodule). These rules apply to all work in
+This project uses Docket, attached at `<DOCKET_PATH>` (e.g.
+`./docket` via symlink or submodule). These rules apply to all work in
 this project regardless of which phase (see Workflow below) is active.
 
 ## Rules (non-negotiable)
 
-Full source of truth: `<TABOULEH_PATH>/core/RULES.md` — read it, don't
+Full source of truth: `<DOCKET_PATH>/core/RULES.md` — read it, don't
 rely only on this summary. Every action falls into one of three responses:
 
 - **CONFIRM** — stop, state exactly what will happen, get an explicit yes
@@ -43,7 +43,7 @@ complete, specific list — this file does not override or weaken it.
 
 ## Workflow
 
-Full source of truth: `<TABOULEH_PATH>/core/WORKFLOW.md`. Work moves
+Full source of truth: `<DOCKET_PATH>/core/WORKFLOW.md`. Work moves
 through five phases: **Ticket** (planned and approved before code is
 written) → **Implement** → **Self-review** → **Review** (independent check
 against the Ticket) → **Done**.
@@ -54,7 +54,7 @@ does, announce which phase is active and self-enforce its boundaries:
 - In **Ticket**, only produce the Ticket document — no code edits.
 - In **Implement**, only touch files listed in the Ticket's Files Touched.
 - In **Self-review**, run the checklist in
-  `<TABOULEH_PATH>/core/recipes/recipe-self-review.md` before declaring
+  `<DOCKET_PATH>/core/recipes/recipe-self-review.md` before declaring
   work ready for Review.
 - **For Review, open a new chat** rather than continuing this one — paste
   in only the Ticket file and the diff against its baseline commit, not
@@ -68,7 +68,7 @@ does, announce which phase is active and self-enforce its boundaries:
   it mechanically.
 
 Tickets are created under `<TICKETS_PATH>` (e.g. `./tickets/`) using
-`<TABOULEH_PATH>/core/templates/ticket.template.md`.
+`<DOCKET_PATH>/core/templates/ticket.template.md`.
 
 ## Project Audit
 

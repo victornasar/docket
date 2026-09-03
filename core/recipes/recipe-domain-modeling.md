@@ -3,7 +3,7 @@
 Owner: Planner, ongoing across many Tickets — not a single-Ticket
 procedure. Adapted from the `domain-modeling` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills) — reworked into
-Tabouleh's own words, not reproduced verbatim.
+Docket's own words, not reproduced verbatim.
 
 ## The idea
 

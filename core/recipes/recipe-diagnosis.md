@@ -5,7 +5,7 @@ bug or performance regression with no known cause — or the Implementer, if
 a bug turns out mid-Implement to be somewhere other than where the Ticket
 said it was. Adapted from the `diagnosing-bugs` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills) — reworked into
-Tabouleh's own words and split across the workflow rather than reproduced
+Docket's own words and split across the workflow rather than reproduced
 verbatim.
 
 ## The idea

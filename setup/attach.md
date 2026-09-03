@@ -1,16 +1,16 @@
-# Attaching Tabouleh to a New Project
+# Attaching Docket to a New Project
 
-Step-by-step instructions for wiring Tabouleh into a project that doesn't
+Step-by-step instructions for wiring Docket into a project that doesn't
 have it yet. This is a one-time setup per project (with occasional Project
 Audit updates afterward).
 
 > **Note:** the distribution model is moving to a vendored copy pinned to
-> a release tag, with a `tabouleh sync` command. Until the `attach` script
+> a release tag, with a `docket sync` command. Until the `attach` script
 > lands, the symlink/submodule steps below still apply.
 
 ## Overview
 
-1. Bring Tabouleh into the project as a symlink or submodule — not a copy.
+1. Bring Docket into the project as a symlink or submodule — not a copy.
 2. Run a Project Audit on the project.
 3. Fill in the Ticket and Project Audit templates.
 4. Generate the adapter file for whichever tool the project uses.
@@ -20,23 +20,23 @@ Audit updates afterward).
 
 Choose one, from the project's root:
 
-**Symlink** (simplest, best when Tabouleh and the project are both local
+**Symlink** (simplest, best when Docket and the project are both local
 and you're fine with a machine-local link — note this doesn't travel with
 a fresh clone unless the symlink itself is committed and re-creatable):
 
 ```bash
-ln -s /path/to/tabouleh ./tabouleh
+ln -s /path/to/docket ./docket
 ```
 
 **Git submodule** (better when the project is shared/cloned by others and
-needs Tabouleh to come along consistently):
+needs Docket to come along consistently):
 
 ```bash
-git submodule add <tabouleh-repo-url> tabouleh
+git submodule add <docket-repo-url> docket
 git submodule update --init --recursive
 ```
 
-Either way, confirm `./tabouleh/core/RULES.md` resolves before continuing.
+Either way, confirm `./docket/core/RULES.md` resolves before continuing.
 
 ## Step 2 — Run the Project Audit
 
@@ -49,7 +49,7 @@ Rules — it's read-only investigation, no confirmation needed.
 
 ```
 Run a Project Audit on this project using the format in
-tabouleh/core/templates/project-audit.template.md. Read the codebase to
+docket/core/templates/project-audit.template.md. Read the codebase to
 fill in Stack, Structure, Conventions, Test setup, Build/run/deploy
 commands, Risky areas, and Environments. Do not guess at conventions —
 point to actual examples in the codebase for each one. Save the result as
@@ -78,21 +78,21 @@ Pick the adapter matching the tool this project uses:
    Project Audit from Step 2.
 3. Create `.claude/agents/planner.md`, `.claude/agents/implementer.md`,
    and `.claude/agents/reviewer.md`, sourced from
-   `tabouleh/core/roles/*.md`, with tool permissions set per the adapter
+   `docket/core/roles/*.md`, with tool permissions set per the adapter
    README (planner: no write tools; implementer: full read/write/execute;
    reviewer: read-only).
 
 **Cursor:**
 1. Read [`../adapters/cursor/README.md`](../adapters/cursor/README.md).
 2. Copy [`../adapters/cursor/cursorrules.template`](../adapters/cursor/cursorrules.template)
-   to `.cursor/rules/tabouleh.mdc` (preferred) or `.cursorrules` (legacy),
+   to `.cursor/rules/docket.mdc` (preferred) or `.cursorrules` (legacy),
    fill in every placeholder using the Project Audit from Step 2.
 
 **Another tool not listed here:** there's no adapter yet. Use the Claude
 Code or Cursor adapter as a reference for the pattern (pull the Rules +
 the workflow into whatever context mechanism the tool reads
 automatically, plus the project's Project Audit) and write a new
-`adapters/<tool>/` following that shape. This is a change to Tabouleh
+`adapters/<tool>/` following that shape. This is a change to Docket
 itself, so it follows the same confirm-before-editing-core discipline
 noted in the main README.
 
@@ -100,9 +100,9 @@ noted in the main README.
 Step 2 (the Project Audit) is already done:
 
 ```
-Tabouleh is attached at ./tabouleh. The Project Audit is at
+Docket is attached at ./docket. The Project Audit is at
 ./PROJECT_AUDIT.md. Generate the adapter for [Claude Code / Cursor]
-following tabouleh/setup/attach.md Step 4: produce the CLAUDE.md (and
+following docket/setup/attach.md Step 4: produce the CLAUDE.md (and
 .claude/agents/ files) or the Cursor rules file, with every placeholder
 filled in from the Project Audit. Show me the generated file(s) before
 writing them.
@@ -121,5 +121,5 @@ Before starting real work:
   and format the tool actually auto-loads (see the tool's own docs — this
   varies and changes over time).
 
-Once verified, Tabouleh is attached. Ordinary work on this project now
+Once verified, Docket is attached. Ordinary work on this project now
 starts with a Ticket, per [`../core/WORKFLOW.md`](../core/WORKFLOW.md).

@@ -2,7 +2,7 @@
 
 Owner: Implementer, during Implement. Adapted from the `tdd` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills) — reworked into
-Tabouleh's own words and tied into the Ticket/workflow structure rather
+Docket's own words and tied into the Ticket/workflow structure rather
 than reproduced verbatim.
 
 Use this when a Ticket's approach involves new behavior with a test suite

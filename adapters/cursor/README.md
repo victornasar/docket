@@ -1,6 +1,6 @@
 # Adapter: Cursor
 
-How Tabouleh's core concepts map into Cursor's rules mechanism.
+How Docket's core concepts map into Cursor's rules mechanism.
 
 > **Experimental — not exercised on a real project.** Cursor has no
 > subagent primitive, so it cannot run the independent Review pass as a
@@ -11,14 +11,14 @@ How Tabouleh's core concepts map into Cursor's rules mechanism.
 
 ## Mapping
 
-| Tabouleh concept | Cursor mechanism |
+| Docket concept | Cursor mechanism |
 |---|---|
-| `core/RULES.md` + `core/WORKFLOW.md` | Content inlined into `.cursor/rules/tabouleh.mdc` (or a legacy `.cursorrules` file — see below), applied project-wide |
+| `core/RULES.md` + `core/WORKFLOW.md` | Content inlined into `.cursor/rules/docket.mdc` (or a legacy `.cursorrules` file — see below), applied project-wide |
 | Planner, Implementer, Reviewer | No native sub-agent/role separation in Cursor the way Claude Code's `.claude/agents/` provides it — see "Role separation" below for how to approximate it |
 | Ticket | A markdown file (e.g. `tickets/<slug>.md`), created from `core/templates/ticket.template.md`, referenced in chat when starting work |
 | Project Audit | A markdown file (e.g. `PROJECT_AUDIT.md` at project root), included as an `@file` reference or inlined into the rules file |
-| Project Context | Cursor's own project context plus the rules file — Tabouleh doesn't add new machinery here |
-| Recipes | Referenced by relative path into the attached `tabouleh/` repo from the rules file or pulled in via `@file` when relevant |
+| Project Context | Cursor's own project context plus the rules file — Docket doesn't add new machinery here |
+| Recipes | Referenced by relative path into the attached `docket/` repo from the rules file or pulled in via `@file` when relevant |
 
 ## Rules file format
 
@@ -27,7 +27,7 @@ supports multiple scoped rule files with frontmatter controlling when they
 apply) and the older single `.cursorrules` file. Use
 [`cursorrules.template`](cursorrules.template) either way:
 
-- **Preferred:** save it as `.cursor/rules/tabouleh.mdc` with `alwaysApply:
+- **Preferred:** save it as `.cursor/rules/docket.mdc` with `alwaysApply:
   true` in the frontmatter, so the Rules and the workflow are always in
   context regardless of what file is open.
 - **Legacy:** save it as `.cursorrules` at the project root if the project
@@ -87,6 +87,6 @@ knowing going in, not something to discover halfway through.
 ## Setup
 
 See [`setup/attach.md`](../../setup/attach.md) for the full walkthrough.
-The short version: symlink or submodule `tabouleh/` into the project, run
+The short version: symlink or submodule `docket/` into the project, run
 `cursorrules.template` through the project's Project Audit to produce a
 real rules file, and place it per the format guidance above.
