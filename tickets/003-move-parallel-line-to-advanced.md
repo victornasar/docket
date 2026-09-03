@@ -1,7 +1,7 @@
 # Ticket: Move `PARALLEL_LINE.md` out of the frozen spine into `advanced/`
 
-**Status:** draft
-**Owner (Implementer):**
+**Status:** done
+**Owner (Implementer):** Claude (this session)
 **Retry count:** 0
 **Related project Mise en Place:** N/A — Tabouleh's own repo
 **Worktree:** (blank)
