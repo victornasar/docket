@@ -1,9 +1,9 @@
-# Kitchen Rules
+# Rules
 
-These rules apply to every role (Executive Chef, Line Cook, Expediter) on
-every project Tabouleh is attached to, regardless of model or tool. They are
-not suggestions and not overridable by a Ticket, a user request, or a
-Recipe. If a Ticket ever conflicts with these rules, the rules win and the
+These rules apply to every role (Planner, Implementer, Reviewer) on every
+project Tabouleh is attached to, regardless of model or tool. They are not
+suggestions and not overridable by a Ticket, a user request, or a Recipe.
+If a Ticket ever conflicts with these rules, the rules win and the
 conflict gets escalated to the human.
 
 Every rule below names a **specific action** and a **specific required
@@ -85,7 +85,7 @@ response**. There are three possible responses:
 These aren't a single action/response pair — they're standing requirements
 that apply throughout every Ticket:
 
-- **No Ticket is fired (see [`THE_PASS.md`](THE_PASS.md)) without a clean,
+- **No Ticket is started (see [`WORKFLOW.md`](WORKFLOW.md)) without a clean,
   committed starting state to roll back to.** If the working tree is dirty
   or on a branch with unrelated uncommitted changes, that gets resolved
   first.
@@ -105,19 +105,19 @@ that apply throughout every Ticket:
 
 | Action | Response | Notes |
 |---|---|---|
-| Work that falls outside the current Ticket's stated files/approach ("while I'm in here" fixes, drive-by refactors) | **BLOCK** for the Line Cook | Not this role's call — see [`line-cook.md`](roles/line-cook.md) on scope creep. Note it and let the Executive Chef decide whether it becomes a new Ticket. |
-| A Ticket that is ambiguous, internally contradictory, or missing acceptance criteria | **ESCALATE** before firing | Don't guess at intent on anything with the response classes above. |
-| The Expediter finding a Kitchen Rules violation in finished work | **ESCALATE** immediately, not a normal send-back | See [`expediter.md`](roles/expediter.md) and [`THE_PASS.md`](THE_PASS.md) loopback policy — rule violations don't go through the normal retry loop. |
+| Work that falls outside the current Ticket's stated files/approach ("while I'm in here" fixes, drive-by refactors) | **BLOCK** for the Implementer | Not this role's call — see [`implementer.md`](roles/implementer.md) on scope creep. Note it and let the Planner decide whether it becomes a new Ticket. |
+| A Ticket that is ambiguous, internally contradictory, or missing acceptance criteria | **ESCALATE** before starting | Don't guess at intent on anything with the response classes above. |
+| The Reviewer finding a Rules violation in finished work | **ESCALATE** immediately, not a normal send-back | See [`reviewer.md`](roles/reviewer.md) and [`WORKFLOW.md`](WORKFLOW.md) loopback policy — rule violations don't go through the normal retry loop. |
 
 ## 9. Parallel execution
 
 These apply only when running multiple Tickets at once under
 [`PARALLEL_LINE.md`](PARALLEL_LINE.md) — irrelevant for the normal
-one-Ticket-at-a-time Pass.
+one-Ticket-at-a-time workflow.
 
 | Action | Response | Notes |
 |---|---|---|
-| Firing two Tickets whose Files Touched lists overlap, even by one file, at the same time | **BLOCK** | Not a judgment call — the core invariant `PARALLEL_LINE.md` depends on. Re-scope one of the Tickets or run them sequentially instead. |
+| Starting two Tickets whose Files Touched lists overlap, even by one file, at the same time | **BLOCK** | Not a judgment call — the core invariant `PARALLEL_LINE.md` depends on. Re-scope one of the Tickets or run them sequentially instead. |
 | A merge conflict at a parallel Ticket's merge-back step | **ESCALATE**, don't force-resolve | A conflict here means the disjoint-files invariant was actually violated somewhere — that's a process signal, not a git problem to click through. |
 | Multiple parallel Tickets each hitting a CONFIRM-gated action around the same time | Each gets its own explicit human response | Running in parallel doesn't bundle or reduce confirmation obligations — a yes to one Ticket's gated action is not a yes to another's, even if they land in the same moment. |
 

@@ -1,13 +1,13 @@
 # Recipe: Test-Driven Development
 
-Owner: Line Cook, during Fire. Adapted from the `tdd` skill in
+Owner: Implementer, during Implement. Adapted from the `tdd` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills) — reworked into
-Tabouleh's own words and tied into the Ticket/Pass structure rather than
-reproduced verbatim.
+Tabouleh's own words and tied into the Ticket/workflow structure rather
+than reproduced verbatim.
 
 Use this when a Ticket's approach involves new behavior with a test suite
-to write against (see Mise en Place's Test setup section — if a project
-has no test framework, step 7 below applies instead of the rest).
+to write against (see the Project Audit's Test setup section — if a
+project has no test framework, step 7 below applies instead of the rest).
 
 ## Steps
 
@@ -33,8 +33,8 @@ has no test framework, step 7 below applies instead of the rest).
    criteria gets its own red→green cycle rather than batching several
    together.
 
-5. **Don't refactor mid-cycle.** Refactoring belongs in Plate (self-review,
-   [recipe-self-review.md](recipe-self-review.md)) or in the Standards
+5. **Don't refactor mid-cycle.** Refactoring belongs in Self-review
+   ([recipe-self-review.md](recipe-self-review.md)) or in the Standards
    pass of [recipe-code-review.md](recipe-code-review.md) — interleaving
    it into red/green makes it unclear whether a test failure is a real
    regression or fallout from an in-progress refactor.
@@ -51,7 +51,6 @@ has no test framework, step 7 below applies instead of the rest).
      testing implementation.
 
 7. **No test framework in the project yet?** Don't add one unprompted.
-   Per [`KITCHEN_RULES.md`](../KITCHEN_RULES.md) §3, adding a dependency
-   is a CONFIRM-gated action — flag it back to the Executive Chef as a
-   decision for the human, not something to fold into the current Ticket
-   silently.
+   Per [`RULES.md`](../RULES.md) §3, adding a dependency is a
+   CONFIRM-gated action — flag it back to the Planner as a decision for
+   the human, not something to fold into the current Ticket silently.

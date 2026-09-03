@@ -7,6 +7,13 @@ exist." Deliberate feature additions to Tabouleh (planned, not
 incident-driven) aren't logged here — they don't need the "what happened"
 half of the format, just normal design write-up in their own file.
 
+**Vocabulary note:** entries dated before 2026-09-03 use the earlier
+kitchen-brigade vocabulary — Executive Chef = Planner, Line Cook =
+Implementer, Expediter = Reviewer, The Pass = the workflow
+(`WORKFLOW.md`), Mise en Place = Project Audit, Kitchen Rules = Rules
+(`RULES.md`). The events they describe are unchanged; only the terms were
+renamed.
+
 Newest first.
 
 ---

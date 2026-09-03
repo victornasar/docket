@@ -1,11 +1,11 @@
 # Recipe: Diagnosis
 
-Owner: Executive Chef, as a pre-Ticket investigation when a request is a
-bug or performance regression with no known cause — or the Line Cook, if a
-bug turns out mid-Fire to be somewhere other than where the Ticket said it
-was. Adapted from the `diagnosing-bugs` skill in
+Owner: Planner, as a pre-Ticket investigation when a request is a
+bug or performance regression with no known cause — or the Implementer, if
+a bug turns out mid-Implement to be somewhere other than where the Ticket
+said it was. Adapted from the `diagnosing-bugs` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills) — reworked into
-Tabouleh's own words and split across the Pass rather than reproduced
+Tabouleh's own words and split across the workflow rather than reproduced
 verbatim.
 
 ## The idea
@@ -13,9 +13,9 @@ verbatim.
 A bug with an unknown cause can't be ticketed. You can't write Files
 Touched, an Approach, or a rollback plan for a defect you haven't located
 yet — so trying to skip straight to a Ticket produces a fictional one that
-Fire then can't follow. Diagnosis is the work that turns "X is broken"
-into "X is broken *here*, for *this* reason, and *this* command proves
-it," which is what a real Ticket needs.
+the Implement stage then can't follow. Diagnosis is the work that turns
+"X is broken" into "X is broken *here*, for *this* reason, and *this*
+command proves it," which is what a real Ticket needs.
 
 The whole discipline is one move: **build a tight, red-capable feedback
 loop before theorising about the cause.** A loop that goes red on *this*
@@ -32,19 +32,19 @@ understood (a typo, an obvious off-by-one, a missing null check the
 stack trace points straight at), skip this — write the Ticket directly.
 This is for the bugs where you'd otherwise start guessing.
 
-## Where this sits in the Pass
+## Where this sits in the workflow
 
-- **Phases 1–4 run before Stage 1 (Ticket).** The Executive Chef (or a
+- **Phases 1–4 run before Stage 1 (Ticket).** The Planner (or a
   context it delegates to) does them; the output — confirmed root cause
   plus the minimal repro — becomes the Ticket's Problem statement, and
   the repro becomes its first acceptance criterion (it goes green when
   the fix lands).
-- **Phases 5–6 fold into Fire and Plate.** The Line Cook writes the
-  regression test, applies the fix, and does cleanup as normal Ticket
-  work.
-- If diagnosis during Fire shows the Ticket's Files Touched or Approach
-  was aimed at the wrong place, that's an escalate-to-Chef per
-  [`THE_PASS.md`](../THE_PASS.md) Stage 4 — not something the Line Cook
+- **Phases 5–6 fold into Implement and Self-review.** The Implementer
+  writes the regression test, applies the fix, and does cleanup as normal
+  Ticket work.
+- If diagnosis during Implement shows the Ticket's Files Touched or
+  Approach was aimed at the wrong place, that's an escalate-to-Planner per
+  [`WORKFLOW.md`](../WORKFLOW.md) Stage 4 — not something the Implementer
   re-plans silently.
 
 ## Steps
@@ -73,14 +73,14 @@ This is for the bugs where you'd otherwise start guessing.
    every line with a unique prefix (`[DEBUG-a4f2]`) so cleanup is one
    grep. For performance regressions, measure against a baseline and
    bisect — don't log.
-5. **Regression test, then fix** (Line Cook, during Fire). Turn the
+5. **Regression test, then fix** (Implementer, during Implement). Turn the
    minimal repro into a test at a seam that exercises the real bug
    pattern as it occurs at the call site. Watch it fail, apply the fix,
    watch it pass, then re-run the Phase 1 loop against the original
    un-minimised scenario. If no honest seam exists for the test, say so
    in the handoff notes — that's a finding about the codebase, not a step
    to skip.
-6. **Cleanup** (Line Cook, at Plate). Original repro no longer
+6. **Cleanup** (Implementer, at Self-review). Original repro no longer
    reproduces; all `[DEBUG-...]` instrumentation removed; throwaway
    harnesses deleted; the hypothesis that turned out correct is stated in
    the commit or PR message so the next debugger learns from it.
@@ -91,7 +91,7 @@ This recipe has you show commands and their output. Redact every secret
 before showing it — write `<REDACTED>` in its place, build loops against
 environment variables so credentials stay in the environment, and quote
 only the signal-carrying lines of any captured trace. See
-[`KITCHEN_RULES.md`](../KITCHEN_RULES.md) §5.
+[`RULES.md`](../RULES.md) §5.
 
 ## When you genuinely cannot build a loop
 

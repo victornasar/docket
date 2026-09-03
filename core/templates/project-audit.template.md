@@ -1,4 +1,4 @@
-# Mise en Place: <project name>
+# Project Audit: <project name>
 
 <!--
 The pre-work audit of a project, done once when Tabouleh is attached and
@@ -40,20 +40,20 @@ Exact, copy-pasteable.>
 ## Risky areas
 
 <Fragile code, areas with little/no test coverage, shared state that's
-easy to break, anything a Line Cook should be extra careful editing. This
-section directly informs which Tickets need extra scrutiny or a more
+easy to break, anything an Implementer should be extra careful editing.
+This section directly informs which Tickets need extra scrutiny or a more
 conservative approach.>
 
 ## Environments
 
 <What environments exist (local/dev/staging/prod or equivalent), how
 they're distinguished, and which ones are safe for the agent to interact
-with directly vs. which require confirmation per KITCHEN_RULES.md (e.g.
+with directly vs. which require confirmation per RULES.md (e.g.
 production, any environment with real user data).>
 
-## Existing Kitchen Rules exceptions or additions
+## Existing Rules exceptions or additions
 
-<Most projects use core/KITCHEN_RULES.md as-is. If this project has
-additional rules beyond the universal set — a stricter gate, an extra
-BLOCK — note them here. This document cannot remove or weaken anything in
-core/KITCHEN_RULES.md, only add to it.>
+<Most projects use core/RULES.md as-is. If this project has additional
+rules beyond the universal set — a stricter gate, an extra BLOCK — note
+them here. This document cannot remove or weaken anything in
+core/RULES.md, only add to it.>

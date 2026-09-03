@@ -8,7 +8,7 @@ actual change to `core/`, instead of the weakness just being noticed once
 and then forgotten the next time it bites.
 
 This formalizes what already happened twice in this repo's own history —
-finding that the Expediter was reviewing its own work in the same
+finding that the Reviewer was reviewing its own work in the same
 context, and building the Parallel Line — into a repeatable procedure,
 so future findings go through the same discipline instead of depending on
 someone happening to ask the right question.
@@ -20,17 +20,17 @@ A Line Meeting candidate is a weakness **in the process itself**, found
 sitting down and brainstorming. Two tests, both must pass:
 
 1. **It's about the process, not the output.** "This Ticket's code has a
-   bug" is Expedite's job on that Ticket, not a Line Meeting. "The process
-   that was supposed to catch this kind of bug has a structural gap" is a
-   Line Meeting.
+   bug" is the Review stage's job on that Ticket, not a Line Meeting.
+   "The process that was supposed to catch this kind of bug has a
+   structural gap" is a Line Meeting.
 2. **It's grounded in something that actually happened**, not a vague
-   feeling that something could be better. "The Expediter missed X
+   feeling that something could be better. "The Reviewer missed X
    because it reviewed its own reasoning" is grounded. "Maybe reviews
    should be stricter" is not — that's not specific enough to fix
    anything, and isn't a Line Meeting finding until it's tied to a real
    incident.
 
-Deliberate, planned additions to the harness (a new feature someone
+Deliberate, planned additions to the kit (a new feature someone
 decided to build, like the Parallel Line) are **not** Line Meeting
 findings — they don't need an incident, they need the same design
 rigor as anything else in `core/`, but they're proposed directly, not
@@ -57,7 +57,7 @@ real use exposed.
 4. **On approval, apply the fix and log it in
    [`CHANGELOG.md`](CHANGELOG.md).** One entry: date, the triggering
    project/Ticket, what changed, which files. This is what makes the
-   harness's evolution auditable — every rule in `core/` should be
+   kit's evolution auditable — every rule in `core/` should be
    traceable to either the original scaffold or a specific logged
    incident, not silent drift.
 5. **If the same category of weakness resurfaces after a logged fix**,
@@ -67,18 +67,18 @@ real use exposed.
 
 ## Who can raise a finding
 
-Any role can surface one — a Line Cook running into a scope-creep-adjacent
-situation the rules didn't quite cover, an Expediter noticing its own
-checklist has a gap, an Executive Chef finding Mise en Place structurally
-insufficient for a new kind of project. Whoever notices it writes up steps
-1–2. Only the human approves step 3 — same authority boundary as every
-other core-file change in Tabouleh, nothing new here.
+Any role can surface one — an Implementer running into a
+scope-creep-adjacent situation the rules didn't quite cover, a Reviewer
+noticing its own checklist has a gap, a Planner finding the Project Audit
+structurally insufficient for a new kind of project. Whoever notices it
+writes up steps 1–2. Only the human approves step 3 — same authority
+boundary as every other core-file change in Tabouleh, nothing new here.
 
 ## What this is not
 
-- Not a way around Kitchen Rules' confirmation discipline for `core/` —
+- Not a way around the Rules' confirmation discipline for `core/` —
   it's the concrete procedure for how that discipline gets exercised.
-- Not proactive "let's brainstorm harness improvements" — see the two
+- Not proactive "let's brainstorm kit improvements" — see the two
   tests above. Speculative ideas are fine to raise, but they're a
   conversation, not a Line Meeting finding, until grounded in something
   that actually happened.

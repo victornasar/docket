@@ -1,35 +1,35 @@
 # Recipe: Domain Modeling (a living glossary)
 
-Owner: Executive Chef, ongoing across many Tickets — not a single-Ticket
+Owner: Planner, ongoing across many Tickets — not a single-Ticket
 procedure. Adapted from the `domain-modeling` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills) — reworked into
 Tabouleh's own words, not reproduced verbatim.
 
 ## The idea
 
-Mise en Place captures a project once, at attach time. Vocabulary drifts
-after that — a term gets used two different ways across Tickets written
-months apart, and nobody notices until it causes a real mistake. This
-recipe is a small, optional habit for catching that drift as it happens,
-not a document to produce up front.
+The Project Audit captures a project once, at attach time. Vocabulary
+drifts after that — a term gets used two different ways across Tickets
+written months apart, and nobody notices until it causes a real mistake.
+This recipe is a small, optional habit for catching that drift as it
+happens, not a document to produce up front.
 
 ## Steps
 
 1. **Don't create `CONTEXT.md` preemptively.** Create it the first time a
    real terminology question actually comes up while writing a Ticket —
-   not as part of initial Mise en Place. An example of "real": Vitals'
+   not as part of the initial Project Audit. An example of "real": Vitals'
    Ticket 10 had to settle whether "service" meant only a scheduled,
    due-tracked maintenance item, or also covered a one-off logged repair
    with no schedule — that's exactly the kind of question worth capturing
    once it's resolved, not before.
 
 2. **When the human's words and the codebase's existing naming diverge,
-   say so.** This is a specific, concrete version of the Executive Chef's
+   say so.** This is a specific, concrete version of the Planner's
    existing duty to ask clarifying questions
-   ([`executive-chef.md`](../roles/executive-chef.md)) — worth naming on
-   its own because terminology drift is a recurring, easy-to-miss flavor
-   of ambiguity. "Your request says X, the code calls this Y — same
-   thing?" is a one-line question, not a research project.
+   ([`planner.md`](../roles/planner.md)) — worth naming on its own because
+   terminology drift is a recurring, easy-to-miss flavor of ambiguity.
+   "Your request says X, the code calls this Y — same thing?" is a
+   one-line question, not a research project.
 
 3. **Record resolved terms immediately**, as a short glossary entry (term
    → one-line definition) in `CONTEXT.md`, right when they're settled —
@@ -58,4 +58,4 @@ not a document to produce up front.
    meanings only. Specs belong in Tickets. Reasoned decisions belong in
    ADRs. Implementation notes belong in code comments. If it starts
    accumulating any of those, that content has drifted into the wrong
-   file — move it, don't let `CONTEXT.md` become a second Mise en Place.
+   file — move it, don't let `CONTEXT.md` become a second Project Audit.
