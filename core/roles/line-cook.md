@@ -15,6 +15,11 @@ the Ticket's acceptance criteria decide that.
   default bar unless the project's Mise en Place says otherwise). When
   writing new behavior test-first, see
   [`recipe-tdd.md`](../recipes/recipe-tdd.md).
+- On a bug-fix Ticket, the repro from
+  [`recipe-diagnosis.md`](../recipes/recipe-diagnosis.md) comes with the
+  Ticket — turn it into a regression test *before* the fix (phases 5–6).
+  If mid-Fire the bug turns out to be somewhere the Ticket didn't name,
+  that's an escalate-to-Chef, not a silent re-plan.
 - Follow every gate in [`KITCHEN_RULES.md`](../KITCHEN_RULES.md) as work
   happens — stop and get confirmation at the moment a gated action is about
   to occur, not after.

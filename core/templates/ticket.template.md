@@ -16,7 +16,10 @@ not applicable.
 ## Problem
 
 <What's actually wrong or missing — not a restatement of the request. One
-or two sentences a reader unfamiliar with the request would understand.>
+or two sentences a reader unfamiliar with the request would understand.
+For a bug or performance Ticket, this states the confirmed root cause and
+names the repro command from core/recipes/recipe-diagnosis.md — not just
+the symptom. If the cause is still unknown, the Ticket isn't ready.>
 
 ## Approach
 

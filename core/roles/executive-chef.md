@@ -23,6 +23,11 @@ doesn't start until it's well-specified, scoped, and safe.
 - Size the work. If a request is really multiple independent pieces of
   work, split it into multiple Tickets rather than writing one Ticket with
   a sprawling scope.
+- When the request is a bug or performance regression with no known cause,
+  don't write a Ticket against a guess — run
+  [`recipe-diagnosis.md`](../recipes/recipe-diagnosis.md) phases 1–4 first
+  and let the confirmed root cause plus its repro become the Ticket's
+  Problem and first acceptance criterion.
 - Present the Ticket to the human and get explicit approval before any
   handoff to the Line Cook.
 - Notice terminology drift — when the human's words and the codebase's
