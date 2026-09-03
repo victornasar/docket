@@ -11,7 +11,7 @@ not applicable.
 **Owner (Implementer):**
 **Retry count:** 0
 **Related project audit:** <link, if applicable>
-**Worktree:** <branch name, only if started under core/PARALLEL_LINE.md — leave blank otherwise>
+**Worktree:** <branch name, only if started under advanced/PARALLEL_LINE.md — leave blank otherwise>
 
 ## Problem
 

@@ -103,7 +103,7 @@ otherwise reach real users goes to test/staging or mock recipients, else
 
 ## 8. Parallel execution
 
-Only relevant under [`PARALLEL_LINE.md`](PARALLEL_LINE.md):
+Only relevant under [`advanced/PARALLEL_LINE.md`](../advanced/PARALLEL_LINE.md):
 
 - Starting two Tickets whose Files Touched lists overlap, even by one file
   — **BLOCK**; re-scope one or run them sequentially.

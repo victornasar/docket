@@ -1,5 +1,12 @@
 # The Parallel Line
 
+> **Status: advanced / unproven.** This describes running multiple Tickets
+> concurrently and assumes either multiple human operators or aggressive
+> multi-subagent use. It has not been exercised on a single-operator
+> project. The standard workflow is one Ticket at a time — see
+> [`../core/WORKFLOW.md`](../core/WORKFLOW.md). Not part of the frozen
+> spine; may change or be removed.
+
 The workflow, as written, assumes one Ticket moves through Ticket →
 Implement → Self-review → Review → Done at a time. That's still the
 default — most work should just use it. The Parallel Line is the opt-in
@@ -8,9 +15,9 @@ already-approved Tickets ready to start at once, and it names the real
 machinery that requires: claiming, isolation, and a merge-back step the
 workflow doesn't otherwise have.
 
-This document doesn't replace [`WORKFLOW.md`](WORKFLOW.md) — every stage
-it defines still applies per-Ticket, unchanged. This is what sits around
-multiple instances of it running at once.
+This document doesn't replace [`WORKFLOW.md`](../core/WORKFLOW.md) — every
+stage it defines still applies per-Ticket, unchanged. This is what sits
+around multiple instances of it running at once.
 
 ## When to use this
 
@@ -52,7 +59,7 @@ it:
 
 1. Confirm the Ticket's `Status` is `approved` and it has no
    `Worktree` value set (see the updated
-   [`ticket.template.md`](templates/ticket.template.md) metadata).
+   [`ticket.template.md`](../core/templates/ticket.template.md) metadata).
 2. Set `Status: in-progress` and `Worktree: <branch-name>` (see naming
    below), and commit that change to the Ticket file on the shared
    integration branch (`main`, or whatever the project treats as
@@ -91,10 +98,11 @@ silent overwrite.
 ## Implement, Self-review, Review — unchanged, just per-branch
 
 Nothing about the stages themselves changes. Implement and Self-review
-happen inside the Ticket's worktree exactly as [`WORKFLOW.md`](WORKFLOW.md)
-describes. Review happens the same way too — and per the Reviewer's
-independence requirement (see `WORKFLOW.md`'s Review stage and
-[`roles/reviewer.md`](roles/reviewer.md)), it should still run as a
+happen inside the Ticket's worktree exactly as
+[`WORKFLOW.md`](../core/WORKFLOW.md) describes. Review happens the same way
+too — and per the Reviewer's independence requirement (see `WORKFLOW.md`'s
+Review stage and [`roles/reviewer.md`](../core/roles/reviewer.md)), it
+should still run as a
 separate agent invocation wherever the tool supports it, just pointed at
 that Ticket's branch diff specifically rather than the main working tree.
 A send-back under the Parallel Line goes back to Implement in the *same*

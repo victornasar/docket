@@ -10,11 +10,12 @@ criteria concretely.
  (Planner)    (Implementer)     (Implementer)     (Reviewer)
 ```
 
-This describes one Ticket at a time — the default, and almost always the
-right choice. When there's an actual backlog of independent, already-
-approved Tickets, see [`PARALLEL_LINE.md`](PARALLEL_LINE.md) for running
-several of these pipelines at once; it adds claiming, isolation, and a
-merge-back step around the same five stages below, unchanged.
+This describes one Ticket at a time — the standard workflow, and almost
+always the right choice. An experimental description of running several
+Tickets concurrently lives in
+[`advanced/PARALLEL_LINE.md`](../advanced/PARALLEL_LINE.md); it has not
+been exercised on a single-operator project and is not part of the
+standard flow.
 
 ## Stage 1 — Ticket
 
