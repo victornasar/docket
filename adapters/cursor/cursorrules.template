@@ -6,9 +6,13 @@ frontmatter below) or as a plain .cursorrules file at the project root
 (delete the frontmatter block in that case). Fill in every <PLACEHOLDER>.
 Delete this comment block once done.
 
+Note: the Cursor adapter is experimental. Cursor has no way to run the
+Review pass as a genuinely separate context — a fresh chat is the closest
+approximation. See <TABOULEH_PATH>/adapters/cursor/README.md.
+
 If saving as .mdc, keep this frontmatter so the rules always apply:
 ---
-description: Tabouleh kitchen-brigade workflow and safety rules
+description: Tabouleh workflow and safety rules
 alwaysApply: true
 ---
 -->
@@ -19,11 +23,10 @@ This project uses Tabouleh, attached at `<TABOULEH_PATH>` (e.g.
 `./tabouleh` via symlink or submodule). These rules apply to all work in
 this project regardless of which phase (see Workflow below) is active.
 
-## Kitchen Rules (non-negotiable)
+## Rules (non-negotiable)
 
-Full source of truth: `<TABOULEH_PATH>/core/KITCHEN_RULES.md` — read it,
-don't rely only on this summary. Every action falls into one of three
-responses:
+Full source of truth: `<TABOULEH_PATH>/core/RULES.md` — read it, don't
+rely only on this summary. Every action falls into one of three responses:
 
 - **CONFIRM** — stop, state exactly what will happen, get an explicit yes
   before doing it.
@@ -38,40 +41,40 @@ but a local database, anything touching secrets/credentials, and anything
 touching production or real user data. See the source file for the
 complete, specific list — this file does not override or weaken it.
 
-## Workflow (The Pass)
+## Workflow
 
-Full source of truth: `<TABOULEH_PATH>/core/THE_PASS.md`. Work moves
+Full source of truth: `<TABOULEH_PATH>/core/WORKFLOW.md`. Work moves
 through five phases: **Ticket** (planned and approved before code is
-written) → **Fire** (implement) → **Plate** (self-review) → **Expedite**
-(independent check against the Ticket) → **Serve** (done).
+written) → **Implement** → **Self-review** → **Review** (independent check
+against the Ticket) → **Done**.
 
 Because Cursor doesn't separate roles the way Claude Code's `.claude/agents/`
 does, announce which phase is active and self-enforce its boundaries:
 
 - In **Ticket**, only produce the Ticket document — no code edits.
-- In **Fire**, only touch files listed in the Ticket's Files Touched.
-- In **Plate**, run the self-review checklist in
+- In **Implement**, only touch files listed in the Ticket's Files Touched.
+- In **Self-review**, run the checklist in
   `<TABOULEH_PATH>/core/recipes/recipe-self-review.md` before declaring
-  work ready for Expedite.
-- **For Expedite, open a new chat** rather than continuing this one — paste
+  work ready for Review.
+- **For Review, open a new chat** rather than continuing this one — paste
   in only the Ticket file and the diff against its baseline commit, not
-  the Fire/Plate conversation. A review from a context that never saw the
-  implementation reasoning is a materially stronger check than the same
-  conversation switching roles, since that context has no memory of its
-  own reasoning to defend. Treat continuing in the same chat as a fallback
-  for trivial Tickets only, not the default — and if it's used, it's
-  still read-only in effect: report findings against the Ticket, don't
-  edit files during this phase even though nothing prevents it
-  mechanically.
+  the Implement/Self-review conversation. A review from a context that
+  never saw the implementation reasoning is a materially stronger check
+  than the same conversation switching roles, since that context has no
+  memory of its own reasoning to defend. Treat continuing in the same chat
+  as a fallback for trivial Tickets only, not the default — and if it's
+  used, it's still read-only in effect: report findings against the
+  Ticket, don't edit files during this phase even though nothing prevents
+  it mechanically.
 
 Tickets are created under `<TICKETS_PATH>` (e.g. `./tickets/`) using
 `<TABOULEH_PATH>/core/templates/ticket.template.md`.
 
-## Project Mise en Place
+## Project Audit
 
-<Paste the project's completed Mise en Place here, or reference it — e.g.
-"See MISE_EN_PLACE.md at project root." Stack, conventions, test setup,
-risky areas, and any project-specific additions to Kitchen Rules.>
+<Paste the project's completed Project Audit here, or reference it — e.g.
+"See PROJECT_AUDIT.md at project root." Stack, conventions, test setup,
+risky areas, and any project-specific additions to the Rules.>
 
 ### Stack
 
@@ -97,6 +100,6 @@ risky areas, and any project-specific additions to Kitchen Rules.>
 
 <PLACEHOLDER>
 
-### Project-specific Kitchen Rules additions (if any)
+### Project-specific Rules additions (if any)
 
-<PLACEHOLDER, or "None — universal Kitchen Rules apply as-is.">
+<PLACEHOLDER, or "None — universal Rules apply as-is.">
