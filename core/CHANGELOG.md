@@ -1,11 +1,12 @@
 # Changelog
 
-The running log of [`LINE_MEETING.md`](LINE_MEETING.md) findings — real
-weaknesses found while doing real work on an attached project, and the
-specific fix each one led to. Every entry answers "why does this rule
-exist." Deliberate feature additions to Tabouleh (planned, not
-incident-driven) aren't logged here — they don't need the "what happened"
-half of the format, just normal design write-up in their own file.
+The running log of `core/` changes and the incidents behind them (see
+[`LINE_MEETING.md`](LINE_MEETING.md)) — real weaknesses found while doing
+real work on an attached project, and the specific fix each one led to.
+Every entry answers "why does this rule exist." Deliberate feature
+additions to Tabouleh (planned, not incident-driven) aren't logged here —
+they don't need the "what happened" half of the format, just normal design
+write-up in their own file.
 
 **Vocabulary note:** entries dated before 2026-09-03 use the earlier
 kitchen-brigade vocabulary — Executive Chef = Planner, Line Cook =
