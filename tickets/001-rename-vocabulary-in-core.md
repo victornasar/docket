@@ -1,7 +1,7 @@
 # Ticket: Rename kitchen vocabulary to plain terms across `core/`
 
-**Status:** draft
-**Owner (Implementer):**
+**Status:** done
+**Owner (Implementer):** Claude (this session)
 **Retry count:** 0
 **Related project Mise en Place:** N/A — Tabouleh's own repo, no project-level audit
 **Worktree:** (leave blank — one ticket at a time)
