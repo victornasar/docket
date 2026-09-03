@@ -1,7 +1,7 @@
 # Ticket: Rename the project from Tabouleh to Docket
 
-**Status:** draft
-**Owner (Implementer):**
+**Status:** done
+**Owner (Implementer):** Claude (this session)
 **Retry count:** 0
 **Related project audit:** N/A — this repo
 **Worktree:** (blank)
@@ -102,4 +102,4 @@ reverted by the human — this Ticket's commit does not touch them.
 
 ## Notes for the Reviewer
 
-<Filled during Self-review.>
+Reviewed in isolated context — PASS on all 7 acceptance criteria. Out-of-repo steps (GitHub repo, remote URL, local folder, attach skill) remain for the human.
