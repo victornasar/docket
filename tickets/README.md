@@ -18,6 +18,12 @@ README at what the others produced.
 | 004 | [Compress the Line Meeting, declare the freeze](004-compress-line-meeting-declare-freeze.md) | `core/LINE_MEETING.md` | 001 |
 | 005 | [Reposition README, rename `adapters/` + `setup/`](005-reposition-readme-and-adapters.md) | `README.md`, `adapters/**`, `setup/` | 001 (003, 004) |
 
+## Project rename (follow-on, before the tooling release)
+
+| # | Ticket | Touches | Depends on |
+|---|---|---|---|
+| 006 | [Rename the project to Docket](006-rename-project-to-docket.md) | `README.md`, `core/**`, `adapters/**`, `setup/` | 001–005 |
+
 ## Deferred — not in this batch
 
 - **Behavioural workflow changes** (grill Q6, Q7): the real checkpoint at
