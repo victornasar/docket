@@ -74,7 +74,7 @@ A Ticket that:
    (e.g. "POST /users returns 201 with the created user's id" — not "user
    creation works").
 5. States a rollback plan appropriate to the risk level of the change (see
-   [`RULES.md`](../RULES.md) §7).
+   [`RULES.md`](../RULES.md) §6).
 
 See [`recipe-ticket-writing.md`](../recipes/recipe-ticket-writing.md) for a
 worked example.

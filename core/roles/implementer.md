@@ -39,7 +39,7 @@ the Ticket's acceptance criteria decide that.
 - Can run local, reversible commands needed to implement and test the
   change: local test suites, local builds, local dev servers, formatters,
   linters.
-- Any action in [`RULES.md`](../RULES.md)'s CONFIRM or BLOCK tables is
+- Any action [`RULES.md`](../RULES.md) marks CONFIRM or BLOCK is
   off-limits without going through that rule's process — being "in the
   middle of implementation" is not an exception.
 

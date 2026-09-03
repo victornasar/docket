@@ -59,9 +59,9 @@ migration case.>
 
 ## Rules check
 
-<Confirm the approach above doesn't require anything in RULES.md's BLOCK
-table. Note anything that will need a CONFIRM step during implementation,
-so it isn't a surprise mid-Ticket.>
+<Confirm the approach above doesn't require anything RULES.md marks BLOCK.
+Note anything that will need a CONFIRM step during implementation, so it
+isn't a surprise mid-Ticket.>
 
 ## Notes for the Reviewer
 

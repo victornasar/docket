@@ -29,8 +29,8 @@ an area the Project Audit didn't cover, that gets done or updated first.
 - The Ticket has concrete, checkable acceptance criteria — not "works
   correctly" but specific, verifiable statements.
 - Files Touched is a real list, not "TBD."
-- A rollback plan is stated (see [`RULES.md`](RULES.md) §7).
-- Nothing in the Ticket requires an action in the Rules' BLOCK table.
+- A rollback plan is stated (see [`RULES.md`](RULES.md) §6).
+- Nothing in the Ticket requires an action the Rules mark BLOCK.
   If it does, the Ticket is rewritten to avoid it, or the request is
   escalated to the human before a Ticket is even written.
 - The human has approved the Ticket. **No code is written before this.**
@@ -46,9 +46,9 @@ the files it lists, within the tool/permission boundaries in
 **Exit criteria (must all be true before moving to Self-review):**
 - Every item in the Ticket's approach has been implemented.
 - No files were touched outside the Ticket's Files Touched list. If that
-  turned out to be necessary, this is scope creep — see Rule 8 in
+  turned out to be necessary, this is scope creep — see §7 in
   [`RULES.md`](RULES.md) — and gets flagged rather than silently done.
-- Any action in the Rules' CONFIRM table encountered mid-implementation
+- Any action the Rules mark CONFIRM encountered mid-implementation
   was actually confirmed before it happened, not after.
 
 ## Stage 3 — Self-review
@@ -102,7 +102,7 @@ weaker approximation, documented as such).
    "doesn't look right") and returns the work to the Implementer. This
    goes back to Stage 2 (Implement) with that feedback attached.
 3. **Escalate** — a Rules violation was found (see [`RULES.md`](RULES.md)
-   §8), the Ticket itself turns out to be wrong or ambiguous in a way no
+   §7), the Ticket itself turns out to be wrong or ambiguous in a way no
    amount of re-implementation fixes, or the retry limit below has been
    hit. Goes to the human, not back to the Implementer.
 
@@ -138,7 +138,7 @@ actually confirmed, not skipped. "Done" is the state where a human can
 merge/deploy without re-checking the Reviewer's work from scratch.
 
 **What "done" does not mean:** it does not mean deployed to production.
-Deployment is its own CONFIRM-gated action (Rules §6) that happens after
+Deployment is its own CONFIRM-gated action (Rules §5) that happens after
 Done, at the human's direction.
 
 **Reaching Done is also a natural session boundary.** Once a Ticket (or a
