@@ -69,10 +69,11 @@ describe it, get an explicit yes), **BLOCK** (nothing unlocks it),
 
 ## What you can do with it
 
-- **Attach it to a project.** `setup/attach.md` walks it: symlink the
-  repo, run a Project Audit of the codebase, generate `CLAUDE.md` and the
-  three `.claude/agents/` role files, verify the agent produces a Ticket
-  before writing code.
+- **Attach it to a project.** Run the `attach-docket` skill ("attach
+  docket here"), or follow [`setup/attach.md`](setup/attach.md) by hand:
+  symlink the repo, run a Project Audit of the codebase, generate
+  `CLAUDE.md` and the three `.claude/agents/` role files, then verify the
+  agent produces a Ticket before writing code.
 - **Run work through it.** Describe a change; the session (as Planner)
   writes a Ticket and shows it to you; you approve or adjust; it
   implements, self-reviews, spawns the Reviewer, and returns Pass /
