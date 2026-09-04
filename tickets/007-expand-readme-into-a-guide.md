@@ -1,3 +1,33 @@
+# Ticket: Expand the README into a usage guide
+
+**Status:** done
+**Owner (Implementer):** Claude (this session)
+**Retry count:** 0
+**Related project audit:** N/A — this repo
+**Worktree:** (blank)
+
+**Depends on:** 001–006 (the whole rename/reposition — this builds on the
+post-006 README).
+
+## Problem
+
+The post-006 README defines Docket and lays out the repo, but a reader
+still has to open `WORKFLOW.md`, `roles/`, and `RULES.md` to learn how the
+thing actually runs and what they can do with it. Add two sections so the
+README works as a standalone guide: **How it works** (the five-stage loop,
+the roles, the Rules framing) and **What you can do with it** (attach, run
+work through it, parallel line, evolve the kit — plus what's deferred).
+
+This is not a `core/` change — README is not the frozen spine.
+
+## Approach
+
+Rewrite `README.md` to the content below. Everything through "The mental
+model" is unchanged; "Quick start" is absorbed into "What you can do with
+it"; "Repo map", "Reading order", "Scope" are unchanged. Two new sections
+are inserted between "The mental model" and "Repo map".
+
+```markdown
 # Docket
 
 Docket is an opinionated planning-and-review workflow you vendor into a
@@ -131,3 +161,41 @@ the structural spine is **frozen** — see
 [`core/LINE_MEETING.md`](core/LINE_MEETING.md) ("Changing this kit") for
 what that means and how a change gets made when a real incident justifies
 one.
+```
+
+## Files touched
+
+- `README.md`
+
+## Acceptance criteria
+
+- [ ] `README.md` has a `## How it works` section with the five-stage
+      table (Ticket / Implement / Self-review / Review / Done, with owner
+      and exit gate per row), the send-back-loop paragraph, the
+      three-roles paragraph, and the Rules-framing paragraph.
+- [ ] `README.md` has a `## What you can do with it` section covering:
+      attach, run work through it, the parallel line (linked, marked
+      experimental), evolve the kit, and a "not built yet" list.
+- [ ] The old `## Quick start` section is gone (absorbed into "What you
+      can do with it").
+- [ ] Everything from the title through `## The mental model`, and the
+      `## Repo map` / `## Reading order` / `## Scope` sections, is
+      unchanged from the current README.
+- [ ] Every markdown link in `README.md` resolves.
+- [ ] No content contradicts `core/WORKFLOW.md`, `core/roles/*`, or
+      `core/RULES.md` (the README summarizes them; it must not drift).
+
+## Rollback plan
+
+Single commit. `git revert <sha>` restores the leaner README.
+
+## Rules check
+
+- No BLOCK action. `README.md` is not under `core/` or `adapters/`, so
+  RULES.md §2's confirm-gate doesn't formally apply, but this Ticket's
+  approval covers it regardless. Read-before-write observed. Not a `core/`
+  change — the freeze doesn't apply.
+
+## Notes for the Reviewer
+
+Reviewed in isolated context — PASS on all 6 criteria, no drift from core/. Two non-blocking notes: the Review-row exit gate lists outcomes not a gate phrasing; the host-baseline / Docket-additions lists are illustrative, not exhaustive.
