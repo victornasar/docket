@@ -30,8 +30,28 @@ don't rely on this summary for the actual rules.
 
 See `<DOCKET_PATH>/core/WORKFLOW.md` for the full workflow. In short:
 Ticket (planned and approved before code is written) → Implement → Self-review
-→ Review (independent read-only check) → Done. No code is written before a
-Ticket is approved.
+(record Evidence) → Review (independent read-only audit of Evidence + diff)
+→ Done. No code is written before a Ticket is approved.
+
+**Done is an evidence state:** every acceptance criterion has recorded
+Evidence; **`docket pre-review`** (verify → check-scope → check-evidence)
+exited 0; the independent Reviewer Pass'd adequacy. An agent's claim is
+not evidence. Green gates do **not** prove AC adequacy. See
+`<DOCKET_PATH>/core/recipes/recipe-self-review.md` and
+`<DOCKET_PATH>/tooling/README.md`.
+
+### Pre-Review gates (mandatory)
+
+Before spawning the Reviewer, Self-review must end with:
+
+```bash
+<DOCKET_PATH>/bin/docket pre-review <ticket.md> --audit PROJECT_AUDIT.md
+# After copying Project verify from that run into the Ticket (second pass only):
+<DOCKET_PATH>/bin/docket pre-review <ticket.md> --audit PROJECT_AUDIT.md --skip-verify
+```
+
+`--skip-verify` skips re-running the Audit command after a real verify —
+it is not a substitute for verify. Non-zero → fix and retry; do not hand off.
 
 ## Roles
 
@@ -39,16 +59,19 @@ This project uses three Claude Code agents, defined in `.claude/agents/`,
 sourced from `<DOCKET_PATH>/core/roles/`:
 
 - **planner** — produces Tickets, no write access to code.
-- **implementer** — scoped to the approved Ticket.
-- **reviewer** — read-only tools, checks work against the Ticket before
-  it's called done.
+- **implementer** — scoped to the approved Ticket; runs pre-review gates.
+- **reviewer** — read-only tools; audits Ticket Evidence and the diff
+  before work is called done. Missing Evidence → send-back.
 
 **At Review, spawn the `reviewer` subagent via the Agent tool — do not
 review the work in the same conversation that just implemented it.** Give
-it only the Ticket's file path and the diff against its baseline commit;
-it should not inherit the Implement/Self-review conversation or reasoning.
-This is the actual mechanism behind "independent check" in `WORKFLOW.md` —
-a same-context role switch is not a substitute for it.
+it the Ticket path, and prefer also the output of
+`<DOCKET_PATH>/bin/docket review-packet <ticket.md>` (Baseline diff
+command, attestation paths, role/workflow file paths). It should not
+inherit Implement/Self-review conversation or reasoning. This is the
+actual mechanism behind "independent check" in `WORKFLOW.md` — a
+same-context role switch is not a substitute. The Reviewer audits
+evidence; it does not invent it.
 
 Tickets are created under `<TICKETS_PATH>` (e.g. `./tickets/`) using
 `<DOCKET_PATH>/core/templates/ticket.template.md`.
@@ -72,6 +95,12 @@ and any project-specific additions to the Rules.>
 ### Test setup
 
 <PLACEHOLDER>
+
+### Verification
+
+<PLACEHOLDER — canonical commands from Project Audit Verification; omit
+commands the project does not support. Prefer one Canonical umbrella
+command when the project has it.>
 
 ### Build / run / deploy commands
 

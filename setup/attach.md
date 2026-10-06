@@ -50,10 +50,13 @@ Rules — it's read-only investigation, no confirmation needed.
 ```
 Run a Project Audit on this project using the format in
 docket/core/templates/project-audit.template.md. Read the codebase to
-fill in Stack, Structure, Conventions, Test setup, Build/run/deploy
+fill in Stack, Structure, Conventions, Test setup, Verification
+(canonical test/typecheck/lint/format/build — only commands that exist;
+prefer one umbrella command if the project has it), Build/run/deploy
 commands, Risky areas, and Environments. Do not guess at conventions —
-point to actual examples in the codebase for each one. Save the result as
-PROJECT_AUDIT.md at the project root.
+point to actual examples in the codebase for each one. Do not invent
+verification commands. Save the result as PROJECT_AUDIT.md at the
+project root.
 ```
 
 Review the result yourself before moving on — this document is what every
@@ -123,3 +126,10 @@ Before starting real work:
 
 Once verified, Docket is attached. Ordinary work on this project now
 starts with a Ticket, per [`../core/WORKFLOW.md`](../core/WORKFLOW.md).
+
+**Stage 2–3 tooling:** ensure `docket/bin/docket` is runnable (or
+`PYTHONPATH=docket/tooling python3 -m docket`). Add `.docket/` to the
+project's `.gitignore`. Self-review must end with
+`docket pre-review <ticket> --audit PROJECT_AUDIT.md` (exit 0) before
+Review; fresh Reviewers use `docket review-packet` — see
+[`../tooling/README.md`](../tooling/README.md).

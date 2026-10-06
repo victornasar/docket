@@ -25,10 +25,11 @@ as two separate passes with two separate verdicts.
    it.
 
 2. **Spec axis: does it satisfy the Ticket?** This is
-   [`reviewer.md`](../roles/reviewer.md)'s existing checklist item
-   one — walk the acceptance criteria individually, verify each one
-   against actual behavior, not assumption. Nothing in this recipe
-   replaces that; it's the first of the two axes.
+   [`reviewer.md`](../roles/reviewer.md)'s Spec checklist — including
+   Evidence completeness/adequacy, then walking acceptance criteria
+   against actual behavior (not assumption). Missing Evidence is a Spec
+   fail / send-back. Nothing in this recipe replaces that; it's the first
+   of the two axes.
 
 3. **Standards axis: is it well-crafted, independent of the Ticket?**
    Read the diff a second time, this time ignoring whether it matches the

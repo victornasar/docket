@@ -11,6 +11,7 @@ not applicable.
 **Owner (Implementer):**
 **Retry count:** 0
 **Related project audit:** <link, if applicable>
+**Baseline:** <git commit SHA at Ticket start — required for `docket check-scope`>
 **Worktree:** <branch name, only if started under advanced/PARALLEL_LINE.md — leave blank otherwise>
 
 ## Problem
@@ -43,11 +44,13 @@ every Ticket needs this, only ones with a new shape to get wrong.>
 ## Acceptance criteria
 
 <Checkable statements, not descriptions. Each one should have a clear
-yes/no answer once checked.>
+yes/no answer once checked. Number them AC-1, AC-2, … so Evidence can
+refer to them. Optionally note an intended verify method in parentheses
+when obvious — the Implementer records actual execution in Evidence.>
 
-- [ ]
-- [ ]
-- [ ]
+- [ ] AC-1:
+- [ ] AC-2:
+- [ ] AC-3:
 
 ## Rollback plan
 
@@ -63,6 +66,64 @@ migration case.>
 Note anything that will need a CONFIRM step during implementation, so it
 isn't a surprise mid-Ticket.>
 
+## Evidence
+
+<!--
+Filled during Self-review by the Implementer. Leave blank at Ticket
+approval. Schema source of truth: core/recipes/recipe-self-review.md.
+An agent's claim is not evidence. Evidence is what allows the system to
+trust the claim.
+-->
+
+### Project verify
+
+```text
+command: <from `docket verify` — not typed by hand>
+exit: <from `docket verify` attestation>
+log: <path written by `docket verify`>
+ran_at: <ISO timestamp from attestation>
+git_head: <from attestation>
+tree_fingerprint: <from attestation>
+attestation: <.docket/verify/….json from `docket verify`>
+```
+
+### Acceptance criteria
+
+```text
+id: AC-1
+criterion: <copy of the criterion>
+method: test | command | manual | artifact
+how: <exact command or steps>
+result: pass | fail | n/a
+evidence: <path, output excerpt, or artifact>
+notes: <optional>
+
+id: AC-2
+criterion:
+method:
+how:
+result:
+evidence:
+notes:
+```
+
+### Scope review
+
+```text
+diff_vs_files_touched: match | extras | missing
+extras: <paths not on Files Touched, or none>
+justified: yes | no | n/a
+notes: <if extras, why — or revert before Review>
+```
+
+<!--
+Stage 2: run `docket check-scope <ticket>` (uses Baseline + Files Touched).
+tickets/ and .docket/ are auto-allowed. Scope review fields above remain for
+the handoff; the CLI is the mechanical gate.
+-->
+
 ## Notes for the Reviewer
 
-<Filled in during Self-review, not now — left blank at Ticket-approval time.>
+<Optional extras beyond Evidence — deviations from Approach with
+justification, CONFIRM log, open questions. Evidence above is required;
+this section is for anything else the Reviewer should know.>

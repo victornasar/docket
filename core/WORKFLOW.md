@@ -10,6 +10,27 @@ criteria concretely.
  (Planner)    (Implementer)     (Implementer)     (Reviewer)
 ```
 
+Trust model in one line: **specify → execute → prove → independently
+review evidence → trust.** An agent's claim is not evidence. Evidence is
+what allows the system to trust the claim.
+
+**Stage 1** required Evidence by workflow. **Stage 2** added mechanical
+tooling. **Stage 3** makes those gates the default Self-review → Review
+handoff (`docket pre-review`):
+
+- `docket verify` — runs the Project Audit canonical command; writes log +
+  attestation (real exit, `git_head`, `tree_fingerprint`)
+- `docket check-scope` — fails if paths changed since Ticket **Baseline**
+  are outside Files Touched
+- `docket check-evidence` — fails if Evidence is structurally incomplete,
+  does not match attestation, or attestation is stale
+- `docket pre-review` — runs the three in that order; non-zero **blocks**
+  Review handoff
+- `docket review-packet` — paths/commands for a fresh-context Reviewer
+
+`check-evidence` / `pre-review` do **not** judge whether evidence proves
+an AC — that remains Reviewer judgment. Exit 0 ≠ AC adequacy.
+
 This describes one Ticket at a time — the standard workflow, and almost
 always the right choice. An experimental description of running several
 Tickets concurrently lives in
@@ -23,12 +44,15 @@ standard flow.
 **What happens:** The Planner turns a raw request into a Ticket using
 [`ticket.template.md`](templates/ticket.template.md): Problem, Approach,
 Files Touched, Acceptance Criteria (a checklist, not prose), Rollback Plan.
-If the project hasn't had a Project Audit run yet, or the request touches
-an area the Project Audit didn't cover, that gets done or updated first.
+The Evidence section stays blank until Self-review. If the project hasn't
+had a Project Audit run yet, or the request touches an area the Project
+Audit didn't cover, that gets done or updated first — including the
+Audit's Verification commands.
 
 **Exit criteria (must all be true before moving to Implement):**
 - The Ticket has concrete, checkable acceptance criteria — not "works
-  correctly" but specific, verifiable statements.
+  correctly" but specific, observable statements (see
+  [`recipe-ticket-writing.md`](recipes/recipe-ticket-writing.md)).
 - Files Touched is a real list, not "TBD."
 - A rollback plan is stated (see [`RULES.md`](RULES.md) §6).
 - Nothing in the Ticket requires an action the Rules mark BLOCK.
@@ -44,6 +68,15 @@ Implementer implements exactly what the Ticket describes, touching only
 the files it lists, within the tool/permission boundaries in
 [`implementer.md`](roles/implementer.md).
 
+While implementing, the intended loop is:
+
+```
+Implement → Verify → Inspect failures → Fix → Re-verify → (repeat)
+```
+
+Do not treat a green run from before the final fix as sufficient proof.
+Final evidence is recorded in Self-review against the final state.
+
 **Exit criteria (must all be true before moving to Self-review):**
 - Every item in the Ticket's approach has been implemented.
 - No files were touched outside the Ticket's Files Touched list. If that
@@ -55,18 +88,26 @@ the files it lists, within the tool/permission boundaries in
 ## Stage 3 — Self-review
 
 **Owner:** Implementer (before handing off).
-**What happens:** The Implementer checks its own work against the Ticket
-before anyone else looks at it — the goal is to catch what the Reviewer
-would catch, so the Review stage is confirmation, not discovery. Follow
-[`recipe-self-review.md`](recipes/recipe-self-review.md).
+**What happens:** The Implementer proves the work against the Ticket and
+records that proof in the Ticket's Evidence section before anyone else
+looks at it — so Review confirms evidence, not discovers missing proof.
+Follow [`recipe-self-review.md`](recipes/recipe-self-review.md).
+
+**Never claim an acceptance criterion is satisfied without recording how
+it was verified and what evidence supports the claim.**
 
 **Exit criteria (must all be true before moving to Review):**
-- Every acceptance criterion on the Ticket has been checked, one by one,
-  against the actual result — not assumed.
-- Tests relevant to the change exist and pass locally.
+- Every acceptance criterion has an Evidence record (`method`, `how`,
+  `result`, `evidence`) for the **final** implementation state.
+- Project verify comes from **`docket verify`** (attestation fields copied
+  into the Ticket) — not a hand-typed `exit: 0`.
+- **`docket pre-review <ticket> --audit PROJECT_AUDIT.md`** passes (or the
+  equivalent verify → check-scope → check-evidence sequence). Non-zero
+  blocks Review. Adequacy vs ACs is still for the Reviewer.
+- Scope review fields in Evidence are filled to match the check-scope
+  result.
 - No debug output, commented-out code, or scratch artifacts left in the
   diff.
-- The diff matches the Files Touched list exactly.
 - The rollback plan from the Ticket is still accurate for what was
   actually built (if the implementation diverged from the plan, the
   rollback plan is updated to match).
@@ -75,30 +116,40 @@ would catch, so the Review stage is confirmation, not discovery. Follow
 
 **Owner:** Reviewer.
 **What happens:** The Reviewer — with **read-only** access, it cannot edit
-anything — checks the self-reviewed work against the Ticket's acceptance
-criteria one item at a time. This is an independent check, not a rubber
-stamp of the Implementer's self-review. See [`reviewer.md`](roles/reviewer.md)
-for the full checklist.
+anything — independently audits the Ticket's Evidence and the diff against
+the acceptance criteria. This is not a rubber stamp of the Implementer's
+self-review, and it is not a second implementation pass. See
+[`reviewer.md`](roles/reviewer.md) for the full checklist.
+
+**The Reviewer audits evidence; it does not invent evidence.** Missing or
+inadequate evidence is a **Send-back**, not an invitation to reconstruct
+the Implementer's verification and silently convert a gap into a Pass.
+The Reviewer may independently re-run a critical verification as a
+**spot-check**, but that does **not** replace the Implementer's required
+Evidence handoff (including a fresh `docket verify` attestation). If
+required Evidence is missing → **Send-back**.
 
 **The Reviewer is invoked as a genuinely separate context, not a role
 switch.** When the tool in use supports spawning an independent agent
 (e.g. Claude Code's Agent/Task tool with a dedicated `reviewer`
 definition), Review means actually spawning it — handing it only the
-Ticket and the diff, not the Implement/Self-review conversation that
-produced them. A reviewer who remembers writing the code will defend its
-own reasoning instead of checking it; a reviewer with no memory of writing
-it can't. When the tool has no such mechanism, the adapter for that tool
-states its best available approximation explicitly rather than silently
-treating a same-context role-switch as equivalent — see each adapter's own
-notes on this (Claude Code's is closest to the real thing; Cursor's is a
-weaker approximation, documented as such).
+Ticket (including Evidence) and the diff, not the Implement/Self-review
+conversation that produced them. A reviewer who remembers writing the code
+will defend its own reasoning instead of checking it; a reviewer with no
+memory of writing it can't. When the tool has no such mechanism, the
+adapter for that tool states its best available approximation explicitly
+rather than silently treating a same-context role-switch as equivalent —
+see each adapter's own notes on this (Claude Code's is closest to the real
+thing; Cursor's is a weaker approximation, documented as such).
 
 **Possible outcomes:**
 
-1. **Pass** — every acceptance criterion is met, no Rules violations, diff
-   matches scope. Moves to Done.
-2. **Send-back** — one or more acceptance criteria aren't met, or the diff
-   has scope creep, or tests are missing/failing. The Reviewer writes
+1. **Pass** — every acceptance criterion is met with adequate evidence,
+   project verify recorded as passing where required, scope accounted for,
+   no Rules violations. Moves to Done.
+2. **Send-back** — one or more acceptance criteria aren't met, evidence is
+   missing/inadequate/stale relative to the final diff, scope creep is
+   found, or tests/verification are missing/failing. The Reviewer writes
    specific, itemized feedback (which criterion, why it's not met — not
    "doesn't look right") and returns the work to the Implementer. This
    goes back to Stage 2 (Implement) with that feedback attached.
@@ -123,24 +174,35 @@ weaker approximation, documented as such).
   again.** Attempt 1's Review already established the full picture. If
   attempt 2 only touched what the send-back named, re-confirm the fix,
   re-run whatever a full check would need to re-run to trust the result
-  (a build, the specific test), and reconcile the Ticket's own bookkeeping
-  (Files Touched, acceptance criteria) against the now-current diff — but
-  don't re-derive the whole investigation from zero each round. Full-cost
-  re-verification on every attempt turns a cheap fix into an expensive
-  loop for no added rigor. See [`reviewer.md`](roles/reviewer.md)'s
-  "Keep the report proportional."
+  (a build, the specific test), **update Evidence for those re-runs**, and
+  reconcile the Ticket's own bookkeeping (Files Touched, acceptance
+  criteria) against the now-current diff — but don't re-derive the whole
+  investigation from zero each round. Full-cost re-verification on every
+  attempt turns a cheap fix into an expensive loop for no added rigor. See
+  [`reviewer.md`](roles/reviewer.md)'s "Keep the report proportional."
 
 ## Stage 5 — Done
 
-**What happens:** Work is done. This means: acceptance criteria verifiably
-met, tests passing, no unresolved Reviewer feedback, and — per
+**What happens:** Work is Done when the Ticket has **sufficient recorded
+evidence** that its acceptance criteria were satisfied, project
+verification passed (per the Project Audit), scope is accounted for, an
+independent Reviewer has Pass'd the work, and — per
 [`RULES.md`](RULES.md) — any CONFIRM-gated action along the way was
-actually confirmed, not skipped. "Done" is the state where a human can
-merge/deploy without re-checking the Reviewer's work from scratch.
+actually confirmed, not skipped, with no unresolved ESCALATE.
 
-**What "done" does not mean:** it does not mean deployed to production.
-Deployment is its own CONFIRM-gated action (Rules §5) that happens after
-Done, at the human's direction.
+**Done requires at minimum:**
+- Every acceptance criterion has an Evidence record.
+- Project verification was actually executed via `docket verify`,
+  attestation matches the Ticket, exit is 0, and attestation is not stale
+  (`docket check-evidence` passes).
+- `docket check-scope` passes.
+- Independent Reviewer outcome is Pass (adequacy of evidence vs ACs).
+- No unresolved CONFIRM or ESCALATE.
+
+**What Done does not mean:** merged, deployed, shipped, or "the agent says
+it works." Deployment remains its own CONFIRM-gated action (Rules §5)
+after Done, at the human's direction. A successful deploy with missing
+Evidence is still not Done.
 
 **Reaching Done is also a natural session boundary.** Once a Ticket (or a
 batch of related Tickets) is Done, the conversation that produced it has
@@ -155,8 +217,8 @@ size.
 
 | Stage | Owner | Produces | Exit gate |
 |---|---|---|---|
-| Ticket | Planner | Approved Ticket | Human approval |
+| Ticket | Planner | Approved Ticket (Evidence blank) | Human approval |
 | Implement | Implementer | Implementation | Matches Ticket scope |
-| Self-review | Implementer | Self-reviewed diff | Self-checklist passed |
-| Review | Reviewer | Pass / Send-back / Escalate | Acceptance criteria independently verified |
-| Done | — | Done | No open Reviewer feedback |
+| Self-review | Implementer | Diff + completed Evidence | `docket pre-review` exit 0 (final state) |
+| Review | Reviewer | Pass / Send-back / Escalate | Evidence audited; AC adequacy judged |
+| Done | — | Evidence-backed Done | Pass + evidence + scope + no open gates |

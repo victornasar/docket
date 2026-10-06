@@ -1,63 +1,92 @@
-# Recipe: Self-Review
+# Recipe: Self-Review (evidence handoff)
 
 Owner: Implementer. Run this before handing work to the Reviewer — it's the
-Self-review stage in [`WORKFLOW.md`](../WORKFLOW.md). The goal is to catch
-what the Reviewer would catch, so the Reviewer's job is confirmation, not
-discovery.
+Self-review stage in [`WORKFLOW.md`](../WORKFLOW.md). Portable source of
+truth for the Evidence contract and **Stage 3 pre-Review gates**.
+
+**Rule:** never claim an acceptance criterion is satisfied without recording
+how it was verified and what evidence supports the claim. An agent's claim
+is not evidence.
+
+Mechanical facts come from `bin/docket` / `tooling/` — do not hand-type
+`exit: 0`.
+
+## Intended loop
+
+```
+Implement
+  → self-review (fill AC Evidence)
+  → docket verify          (authoritative run + attestation)
+  → copy Project verify into Ticket
+  → docket check-scope
+  → docket check-evidence
+  → Review (independent)
+```
+
+Preferred single command for the gate block:
+
+```bash
+docket pre-review <ticket.md> --audit PROJECT_AUDIT.md
+# Copy Project verify from that run into the Ticket, then re-check
+# scope + evidence without re-executing the Audit command:
+docket pre-review <ticket.md> --audit PROJECT_AUDIT.md --skip-verify
+```
+
+`--skip-verify` is only for the second pass after a real `verify`
+attestation exists — it is not a substitute for running verify. Prefer a
+full `pre-review` (no skip) whenever the implementation changed.
+
+`verify` is the authoritative execution record. Attestation binds to
+`git_head` + `tree_fingerprint` (Ticket / `.docket/` excluded). Any later
+**implementation** change invalidates attestation — re-verify. Reviewer
+judgment is still required for AC adequacy; green gates ≠ proven criterion.
+
+**Non-zero from any gate blocks Review handoff.** Fix the cause; do not
+report around it.
 
 ## Steps
 
-1. **Re-read the Ticket, not your memory of it.** Open the actual Ticket
-   document. Implementation tends to drift from plan in small ways; re-read
-   rather than relying on recall of what you set out to do.
+1. **Re-read the Ticket.** Confirm **Baseline:** is set (Ticket start SHA).
 
-2. **Walk the acceptance criteria one by one, and actually check each
-   one.** For each checklist item: run the relevant test, exercise the
-   behavior, or read the specific code path — don't mark it done because
-   the surrounding code "looks like it would handle that." If a criterion
-   can't be checked without a manual step, do the manual step now, not
-   assume the Reviewer will.
+2. **Load Project Audit Verification.** Do not invent commands.
 
-3. **Diff against Files Touched.** Run `git diff --stat` (or equivalent)
-   and compare the file list against the Ticket's Files Touched. Anything
-   extra is scope creep — either justify it explicitly in the handoff
-   notes or revert it before handing off.
+3. **Fill per-AC Evidence** (`method`, `how`, `result`, `evidence`). Manual
+   is allowed when judgment is genuine — not a substitute for automation.
 
-4. **Run the full relevant test suite, not just the new tests.** New tests
-   passing doesn't confirm nothing else broke. Run the tests scoped to the
-   area touched at minimum; run the full suite if the project's size makes
-   that practical.
+4. **Run `docket pre-review <ticket> --audit PROJECT_AUDIT.md`** (or
+   `verify` alone). Copy the Project verify block into the Ticket
+   (`command`, `exit`, `log`, `ran_at`, `git_head`, `tree_fingerprint`,
+   `attestation`). Markdown must match the attestation file.
 
-5. **Scan the diff for leftovers.** Debug prints, commented-out old code,
-   `TODO` markers left as a substitute for actually finishing something,
-   hardcoded values that were meant to be temporary, unused imports.
+5. **Run check-scope / check-evidence** (via `pre-review --skip-verify` or
+   individually). Both must exit 0. Fill Scope review fields to match
+   check-scope.
 
-6. **Check secrets and config didn't leak in.** No credential values,
-   tokens, or `.env` contents anywhere in the diff — see
-   [`RULES.md`](../RULES.md) §5.
+6. **Scan leftovers / secrets** ([`RULES.md`](../RULES.md) §5). Update
+   rollback if needed.
 
-7. **Verify the rollback plan is still accurate.** If implementation
-   diverged from the Ticket's original approach (e.g. touched one more
-   file than planned, or a migration ended up structured differently),
-   update the rollback plan to match what was actually built, not what was
-   originally planned.
+7. **Handoff.** Ticket + diff + Evidence. For a fresh-context Reviewer,
+   run `docket review-packet <ticket>` and give them that output plus the
+   Ticket path — they must not need chat history.
 
-8. **Write the handoff notes.** For the Reviewer: which acceptance
-   criteria were checked and how, test results, and any deviations from
-   the original Ticket with a one-line justification for each. This isn't
-   busywork — it's what lets the Reviewer verify efficiently instead of
-   re-deriving context from scratch.
+## Evidence schema (Project verify)
 
-## Self-review checklist (copy into handoff notes)
+```text
+command: <from docket verify>
+exit: <from attestation>
+log: <from attestation>
+ran_at: <from attestation>
+git_head: <from attestation>
+tree_fingerprint: <from attestation>
+attestation: <.docket/verify/….json>
+```
 
-- [ ] Re-read the Ticket in full.
-- [ ] Every acceptance criterion checked individually against actual
-      behavior/test output.
-- [ ] Diff matches Files Touched exactly (or deviations are justified in
-      notes).
-- [ ] Relevant test suite run and passing.
-- [ ] No debug artifacts, dead code, or leftover TODOs standing in for
-      unfinished work.
-- [ ] No secret values anywhere in the diff.
-- [ ] Rollback plan updated to match what was actually built.
-- [ ] Handoff notes written for the Reviewer.
+## Self-review checklist
+
+- [ ] Baseline set; Ticket re-read.
+- [ ] Per-AC Evidence filled.
+- [ ] `docket pre-review` (verify → check-scope → check-evidence) exit 0.
+- [ ] Project verify copied from attestation (not invented).
+- [ ] No debug artifacts / secrets; rollback accurate.
+- [ ] Review packet available for fresh-context Reviewer.
+- [ ] Ready for independent Review — gates do **not** prove AC adequacy.

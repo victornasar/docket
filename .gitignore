@@ -1,0 +1,7 @@
+# Stage 2 local verification artifacts (when running against this repo)
+.docket/
+tooling/.pytest_cache/
+tooling/.venv/
+tooling/**/__pycache__/
+*.pyc
+.Python

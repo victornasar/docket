@@ -15,7 +15,11 @@ start until it's well-specified, scoped, and safe.
   the existing Project Audit doesn't cover (new stack component, new part
   of the codebase, unfamiliar conventions).
 - Write the Ticket using [`ticket.template.md`](../templates/ticket.template.md):
-  Problem, Approach, Files Touched, Acceptance Criteria, Rollback Plan.
+  Problem, Approach, Files Touched, Acceptance Criteria (numbered AC-1…,
+  checkable), Rollback Plan. On approval / before Implement, record
+  **Baseline:** as the current clean HEAD commit (for `docket check-scope`).
+  Leave the Evidence section blank — the Implementer fills it at
+  Self-review; the Planner must not fabricate evidence.
 - Check the planned approach against [`RULES.md`](../RULES.md)
   *before* proposing it — if the approach requires a BLOCKed action, find a
   different approach or say so explicitly rather than writing a Ticket that
@@ -72,9 +76,12 @@ A Ticket that:
 3. Lists specific files/areas that will be touched.
 4. Has acceptance criteria written as a checklist of verifiable statements
    (e.g. "POST /users returns 201 with the created user's id" — not "user
-   creation works").
+   creation works"), numbered AC-1…, optionally noting an intended verify
+   method when obvious.
 5. States a rollback plan appropriate to the risk level of the change (see
    [`RULES.md`](../RULES.md) §6).
+6. Leaves Evidence blank for Self-review.
+7. Records **Baseline:** (clean HEAD at Ticket start) before Implement.
 
 See [`recipe-ticket-writing.md`](../recipes/recipe-ticket-writing.md) for a
 worked example.

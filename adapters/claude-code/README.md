@@ -13,6 +13,9 @@ This is the reference adapter — the one that gets exercised.
 | Project Audit | A markdown file (e.g. `PROJECT_AUDIT.md` at project root), created from `core/templates/project-audit.template.md` |
 | Project Context | The project's `CLAUDE.md` plus whatever memory files the project already keeps — Docket doesn't introduce a separate mechanism, it just makes sure the Project Audit and prior Tickets are part of what gets loaded |
 | Recipes | Referenced directly from `.claude/agents/` role files or `CLAUDE.md` by relative path into the attached `docket/` repo — not copied |
+| Evidence / Done | Self-review ends with `docket pre-review` (verify → check-scope → check-evidence). Reviewer gets Ticket + `review-packet`; still judges AC adequacy |
+| Pre-Review gates | Mandatory before spawning reviewer; non-zero blocks handoff |
+| Skills | Optional thin host skills under `docket/skills/` (e.g. `verify-with-evidence`); install per `skills/README.md` — skills invoke tooling, do not duplicate Docket |
 
 ## CLAUDE.md
 
@@ -44,8 +47,10 @@ Each role becomes an agent definition:
 a mapping.** At Review (see `WORKFLOW.md`), the session that just ran
 Implement/Self-review must actually call the Agent tool with the `reviewer`
 subagent — e.g. "use the Agent tool to launch the `reviewer` subagent,
-passing it the path to the Ticket and the diff against its baseline
-commit, and nothing else about how the implementation was reached." Do
+passing it the path to the Ticket (with Evidence filled) and the diff
+against its baseline commit, and nothing else about how the
+implementation was reached." The Reviewer audits Evidence — missing or
+inadequate Evidence is a send-back, not a cue to invent proof. Do
 **not** treat "I'll now act as Reviewer" in the same conversation as
 equivalent — that's the same-context weakness this mapping exists to
 avoid, and Claude Code's Agent tool is specifically what makes the real

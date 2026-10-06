@@ -19,6 +19,100 @@ Newest first.
 
 ---
 
+## 2026-10-06 — Stage 3: pre-review gates as the default inner loop
+
+**Triggering project:** Docket kit (Stage 2 complete; adversarial leftover
+was habit — agents could skip gates before Review).
+
+**What happened:** Tooling existed, but skill/adapters did not make
+verify → check-scope → check-evidence the mandatory default handoff.
+Cursor Review still risked depending on chat memory.
+
+**Fix:** `docket pre-review` (ordered gates; non-zero blocks handoff);
+`docket review-packet` for fresh-context Review discovery; skill,
+self-review recipe, WORKFLOW, roles, and both adapters require
+pre-review before Review. No Evidence schema redesign. No CI in this
+template repo (documented why). Semantic adequacy remains Reviewer/human.
+
+**Files changed:** `tooling/docket/pre_review.py`, `review_packet.py`,
+`cli.py`, `tooling/tests/test_pre_review.py`, `tooling/README.md`,
+`skills/verify-with-evidence/SKILL.md`, `core/recipes/recipe-self-review.md`,
+`core/WORKFLOW.md`, roles, adapters, this changelog.
+
+---
+
+## 2026-10-06 — Stage 2: mechanical trust gates (verify / scope / evidence)
+
+**Triggering project:** Docket kit (adversarial audit of Stage 1). Stage 1
+made Done an evidence state in prose, but an adversarial agent could still
+type `exit: 0`, omit ACs, leave scope, or reuse stale green runs.
+
+**What happened:** Evidence was forgeable Markdown. Scope was eyeballed.
+No command actually captured Project Audit verification.
+
+**Fix:** Python CLI under `tooling/` + `bin/docket`:
+
+- `docket verify` — runs Audit canonical command; writes log + attestation
+  (`exit`, `git_head`, `tree_fingerprint`)
+- `docket check-scope` — diff since Ticket **Baseline** ⊆ Files Touched
+- `docket check-evidence` — structural Evidence + Markdown must match
+  attestation + freshness (stale after implementation edits)
+
+Ticket Project verify fields extended for attestation binding. Reviewer
+wording clarified: spot-check re-runs ≠ inventing Evidence. pytest suite
+in `tooling/tests/`. Does **not** prove AC adequacy (Reviewer judgment).
+
+**Files changed:** `tooling/**`, `bin/docket`, `core/WORKFLOW.md`,
+`core/templates/ticket.template.md`, roles, `recipe-self-review.md`,
+`skills/verify-with-evidence/SKILL.md`, `README.md`, adapters/setup as
+needed, `LINE_MEETING.md`, this changelog.
+
+---
+
+## 2026-10-06 — Done was a process state, not an evidence state
+
+**Triggering project:** Docket kit itself (agent-trust audit, 2026-10-06),
+grounded also in vitals Ticket 19 and related review incidents where
+implementation could satisfy a narrative Self-review without recorded
+proof, and where shape/spec misses were caught only after expensive
+independent review cycles.
+
+**What happened:** `WORKFLOW.md` defined Done as criteria "verifiably met"
+and "a human can merge without re-checking," but Self-review and Review
+only required checklist prose — no Ticket schema for criterion → method →
+result → evidence. Agents could claim success; Reviewers could pass on
+code that "looked right." Scope was reviewed by eye (`git diff --stat`),
+not mechanically. Trust came from process and instruction-following.
+
+**Why the gap existed:** the kit optimized for specify → constrain →
+review, and never made "prove" a first-class handoff artifact. Recipes
+said "check against the actual result" without a place to record that
+check. No freeze-exception path had been used for a trust-model fix.
+
+**Fix (Stage 1 — schema + workflow only; narrow freeze exception in
+[`LINE_MEETING.md`](LINE_MEETING.md)):** Ticket Evidence section; Project
+Audit Verification commands; Self-review / Implementer / Reviewer /
+WORKFLOW Done require recorded evidence; Reviewer audits evidence and
+send-backs when it is missing or inadequate; thin
+`skills/verify-with-evidence` skill points at the self-review recipe.
+Scope remains manually reviewed (Stage 2 will add deterministic
+`check-scope`). No claim of mechanical enforcement.
+
+**Files changed:** `core/LINE_MEETING.md`, `core/WORKFLOW.md`,
+`core/templates/ticket.template.md`,
+`core/templates/project-audit.template.md`,
+`core/roles/implementer.md`, `core/roles/reviewer.md`,
+`core/roles/planner.md`, `core/recipes/recipe-self-review.md`,
+`core/recipes/recipe-ticket-writing.md`,
+`core/recipes/recipe-code-review.md`, `README.md`,
+`adapters/claude-code/CLAUDE.md.template`,
+`adapters/claude-code/README.md`,
+`adapters/cursor/cursorrules.template`,
+`adapters/cursor/README.md`, `skills/verify-with-evidence/SKILL.md`
+(new), `skills/README.md` (new), `setup/attach.md`.
+
+---
+
 ## 2026-08-14 — No step between architecture and code for new shapes
 
 **Triggering project:** vitals, Ticket 19, send-back #1 — the

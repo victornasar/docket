@@ -1,0 +1,9 @@
+[project]
+name = "docket-tooling"
+version = "0.2.0"
+description = "Docket Stage 2 deterministic trust gates"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

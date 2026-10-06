@@ -19,6 +19,8 @@ How Docket's core concepts map into Cursor's rules mechanism.
 | Project Audit | A markdown file (e.g. `PROJECT_AUDIT.md` at project root), included as an `@file` reference or inlined into the rules file |
 | Project Context | Cursor's own project context plus the rules file — Docket doesn't add new machinery here |
 | Recipes | Referenced by relative path into the attached `docket/` repo from the rules file or pulled in via `@file` when relevant |
+| Evidence / Done | Ticket Evidence + Stage 2 CLI gates (`docket verify` / `check-scope` / `check-evidence`). Fresh-context Review remains a weaker approximation than Claude Code — mechanical gates still apply |
+| Skills | Optional thin skills under `docket/skills/`; install per `skills/README.md` |
 
 ## Rules file format
 
@@ -41,15 +43,13 @@ here that gets as close to real independence as the Claude Code adapter's
 Agent-tool invocation does. Two ways to approximate the role structure,
 in preference order:
 
-1. **Separate chats (default).** Open a fresh Cursor chat for the Review
-   phase, and give it *only* the Ticket file and the diff to review —
-   don't carry the Implement/Self-review conversation into it, and don't
-   frame it with edit access. This is the closest approximation available
-   in Cursor to a context that never saw the implementation reasoning,
-   which is the actual thing that makes a review independent — not just
-   "asked to check its own work" phrased as a separate step. Default to
-   this even for solo, low-stakes projects; the fresh-context benefit
-   doesn't disappear just because no one else is reviewing alongside you.
+1. **Separate chats (default).** Open a fresh Cursor chat for Review.
+   Paste `docket review-packet <ticket>` output, the Ticket path, and run
+   the packet's `diff_command` — don't carry Implement/Self-review chat,
+   and don't frame Review with edit access. The packet lists attestation,
+   audit, Baseline, and Docket role/workflow paths so Review does not
+   depend on undocumented conversational state. Default to this even for
+   solo, low-stakes projects.
 2. **Sequential, single-session** (fallback for trivial Tickets only):
    work through Ticket → Implement → Self-review → Review as explicit
    phases in one conversation, with the rules file instructing Cursor to

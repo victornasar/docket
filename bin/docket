@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Docket Stage 2 CLI — runs the Python package under tooling/
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+export PYTHONPATH="${ROOT}/tooling${PYTHONPATH:+:$PYTHONPATH}"
+exec python3 -m docket "$@"

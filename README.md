@@ -1,15 +1,33 @@
 # Docket
 
-Docket is an opinionated planning-and-review workflow you vendor into a
-Claude Code project: a Ticket you approve before any code is written, an
-independent review pass before anything is called done, and a procedure
-for improving the workflow itself from real incidents.
+Docket makes one unit of agent work **trustworthy**.
 
-It's a small set of Markdown documents plus role definitions — nothing
-executes, there's no runtime. It lives in its own repo and is brought into
-a project (today by symlink or submodule; a vendored-copy model is
-planned), which then generates a thin adapter file — a `CLAUDE.md` — that
-points back at it.
+```
+Skills  = capability   how to perform a type of work
+Docket  = trust        one Ticket specified, proven, independently reviewed
+pstack  = scale        many trustworthy units (outside this repo — not built here)
+```
+
+Skills (thin, optional) teach *how* to do work and point into Docket
+recipes. Docket owns the Ticket, Evidence, independent Review, and Done.
+Orchestration, parallelism fleets, and outer-loop automation belong above
+Docket (pstack) — not in this kit.
+
+Docket is an opinionated planning-and-review workflow you vendor into a
+Claude Code project: a Ticket you approve before any code is written,
+Evidence recorded at Self-review, an independent review that audits that
+Evidence before anything is called Done, and a procedure for improving
+the workflow itself from real incidents.
+
+It's mostly Markdown plus role definitions, with a small Python CLI
+(`bin/docket` / `tooling/`) for mechanical trust gates: `verify`,
+`check-scope`, `check-evidence`, plus Stage 3 `pre-review` (ordered
+handoff) and `review-packet` (fresh-context Review discovery). Stage 1
+defined Evidence; Stage 2 makes forged exit codes and silent scope creep
+fail closed; Stage 3 makes those gates the default Self-review → Review
+path. It lives in its own repo and is brought into a project (today by
+symlink or submodule; a vendored-copy model is planned), which then
+generates a thin adapter file — a `CLAUDE.md` — that points back at it.
 
 **On "works anywhere":** the `core/` documents are plain Markdown with no
 Claude-specific syntax, so porting the workflow to another tool is
@@ -39,11 +57,17 @@ TICKET → IMPLEMENT → SELF-REVIEW → REVIEW → DONE
 
 | Stage | Owner | What happens | Exit gate |
 |---|---|---|---|
-| **Ticket** | Planner | A request becomes a Ticket: Problem, Approach, Files Touched, Acceptance Criteria (a checklist), Rollback plan. A Project Audit is run first if the area isn't already covered. | The human approves it. No code before this. |
-| **Implement** | Implementer | Execute exactly the Ticket, touching only its Files Touched. Stop at any CONFIRM-gated action. | Every approach step done, no scope creep. |
-| **Self-review** | Implementer | Check your own work against the Ticket — walk each acceptance criterion, diff against Files Touched, run tests, scan for leftovers. | Self-checklist passes. |
-| **Review** | Reviewer | An independent check against the Ticket. In Claude Code this is a real `reviewer` subagent given only the Ticket and the diff — not the conversation that produced them. | Pass / Send-back / Escalate. |
-| **Done** | — | Criteria verifiably met, no open Reviewer feedback. A human can merge without re-checking. A natural session boundary. | — |
+| **Ticket** | Planner | A request becomes a Ticket: Problem, Approach, Files Touched, Acceptance Criteria (AC-1…), Rollback plan. Evidence left blank. Project Audit (incl. Verification commands) if needed. | The human approves it. No code before this. |
+| **Implement** | Implementer | Execute exactly the Ticket, touching only its Files Touched. Verify → fix → re-verify. Stop at any CONFIRM-gated action. | Every approach step done, no scope creep. |
+| **Self-review** | Implementer | Prove the work: fill Evidence for every AC; run `docket pre-review` (verify → check-scope → check-evidence). | `pre-review` exit 0 for the final state. |
+| **Review** | Reviewer | Independent audit of Evidence + diff (use `docket review-packet` for discovery). In Claude Code a real `reviewer` subagent gets only the Ticket and diff — not the Implement conversation. Missing Evidence → send-back. Gates do not prove AC adequacy. | Pass / Send-back / Escalate. |
+| **Done** | — | Evidence-backed Done (see below). Natural session boundary. | — |
+
+**Done** means the Ticket has sufficient recorded evidence that its
+acceptance criteria were satisfied, `docket pre-review` passed (verify +
+scope + evidence integrity), and an independent Reviewer Pass'd adequacy —
+not that the agent claims success, and not that the change is merged or
+deployed. Deployment stays a separate human CONFIRM after Done.
 
 **Send-back loop:** the Reviewer returns itemized feedback and the work
 goes back to Implement. After two send-backs on the same Ticket it
@@ -85,10 +109,14 @@ describe it, get an explicit yes), **BLOCK** (nothing unlocks it),
   `core/` change through "Changing this kit" — grounded in the incident,
   approved by the human, logged in `CHANGELOG.md`.
 
-**Not built yet:** a lightweight checkpoint at Ticket-approval and a
-tiered Reviewer (skip the expensive subagent for trivial Tickets); and the
-tooling — a vendored-copy `docket sync`, an `attach` script, semver +
-`RELEASES.md`.
+**Stage 2–3 tooling:** see [`tooling/README.md`](tooling/README.md).
+Self-review ends with `docket pre-review` (verify → check-scope →
+check-evidence). Fresh Reviewers use `docket review-packet`. Gates do
+**not** prove AC adequacy — Reviewer/human judgment remains.
+
+**Not built yet (later stages):** attach/sync CLIs; trivial-Ticket fast
+path and tiered Reviewer; sampling; pstack-scale parallelism; kit-level CI
+(see tooling README).
 
 ## Repo map
 
@@ -100,13 +128,19 @@ docket/
     LINE_MEETING.md     "Changing this kit": the core/ freeze, and how a change gets made
     CHANGELOG.md        Log of every core/ change and the incident behind it
     roles/              One file per role: planner, implementer, reviewer
-    recipes/            Reusable procedures (safe migration, TDD, diagnosis, ...)
-    templates/          Blank Ticket and Project Audit formats
+    recipes/            Reusable procedures (self-review/evidence, TDD, diagnosis, ...)
+    templates/          Blank Ticket (incl. Evidence) and Project Audit formats
+  skills/
+    verify-with-evidence/  Thin host skill → pre-review + review-packet
+  tooling/
+    docket/                CLI: verify, check-scope, check-evidence,
+                           pre-review, review-packet
+  bin/docket               Wrapper → python3 -m docket
   advanced/
     PARALLEL_LINE.md    Experimental: running multiple Tickets at once (unproven solo)
   adapters/
     claude-code/        Reference adapter: CLAUDE.md + .claude/agents/
-    cursor/             Experimental adapter: .cursor rules, no true independent review
+    cursor/             Experimental adapter: .cursor rules, weaker independent review
   setup/
     attach.md           How to wire Docket into a new project
 ```

@@ -45,27 +45,49 @@ complete, specific list — this file does not override or weaken it.
 
 Full source of truth: `<DOCKET_PATH>/core/WORKFLOW.md`. Work moves
 through five phases: **Ticket** (planned and approved before code is
-written) → **Implement** → **Self-review** → **Review** (independent check
-against the Ticket) → **Done**.
+written) → **Implement** → **Self-review** (record Evidence) → **Review**
+(independent audit of Evidence + diff) → **Done**.
+
+**Done is an evidence state:** Evidence recorded; **`docket pre-review`**
+(verify → check-scope → check-evidence) exited 0; Review Pass'd adequacy.
+An agent's claim is not evidence. Green gates do **not** prove AC
+adequacy. Missing Evidence → send-back. See
+`<DOCKET_PATH>/core/recipes/recipe-self-review.md` and
+`<DOCKET_PATH>/tooling/README.md`. Cursor Review isolation remains weaker
+than Claude Code — mechanical gates still apply.
+
+### Pre-Review gates (mandatory)
+
+Before Review, Self-review must end with exit 0 from:
+
+```bash
+<DOCKET_PATH>/bin/docket pre-review <ticket.md> --audit PROJECT_AUDIT.md
+```
+
+Copy Project verify from that run into the Ticket, then optionally re-run
+with `--skip-verify` for the second pass only (not a substitute for
+verify). Non-zero → fix and retry; do not open Review.
 
 Because Cursor doesn't separate roles the way Claude Code's `.claude/agents/`
-does, announce which phase is active and self-enforce its boundaries:
+does, announce which phase is active and self-enforce its boundaries.
+These are conventions, not tool-enforced gates — Cursor cannot guarantee
+fresh-context Review the way Claude Code's reviewer subagent can.
 
-- In **Ticket**, only produce the Ticket document — no code edits.
+- In **Ticket**, only produce the Ticket document — no code edits; leave
+  Evidence blank; set **Baseline:** at approval.
 - In **Implement**, only touch files listed in the Ticket's Files Touched.
-- In **Self-review**, run the checklist in
-  `<DOCKET_PATH>/core/recipes/recipe-self-review.md` before declaring
-  work ready for Review.
-- **For Review, open a new chat** rather than continuing this one — paste
-  in only the Ticket file and the diff against its baseline commit, not
-  the Implement/Self-review conversation. A review from a context that
-  never saw the implementation reasoning is a materially stronger check
-  than the same conversation switching roles, since that context has no
-  memory of its own reasoning to defend. Treat continuing in the same chat
-  as a fallback for trivial Tickets only, not the default — and if it's
-  used, it's still read-only in effect: report findings against the
-  Ticket, don't edit files during this phase even though nothing prevents
-  it mechanically.
+- In **Self-review**, follow
+  `<DOCKET_PATH>/core/recipes/recipe-self-review.md` and pass
+  `docket pre-review` before declaring ready for Review.
+- **For Review, open a new chat** (default). Paste:
+  1. output of `<DOCKET_PATH>/bin/docket review-packet <ticket.md>`
+  2. the Ticket path (Evidence included)
+  3. the Baseline diff (`git diff <Baseline>` from the packet)
+
+  Do **not** carry Implement/Self-review conversation. Discover paths from
+  the packet and repo files. Audit Evidence; do not invent it. Treat
+  same-chat Review as fallback for trivial Tickets only — still read-only
+  in effect.
 
 Tickets are created under `<TICKETS_PATH>` (e.g. `./tickets/`) using
 `<DOCKET_PATH>/core/templates/ticket.template.md`.
@@ -87,6 +109,11 @@ risky areas, and any project-specific additions to the Rules.>
 ### Test setup
 
 <PLACEHOLDER>
+
+### Verification
+
+<PLACEHOLDER — canonical commands from Project Audit Verification; omit
+commands the project does not support.>
 
 ### Build / run / deploy commands
 

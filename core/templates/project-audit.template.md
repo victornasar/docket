@@ -29,13 +29,66 @@ Ticket's Approach can follow them instead of inventing new ones.>
 
 ## Test setup
 
-<How to run tests, what's covered vs. not, test framework, how to run a
-single test/file, any flaky-test or known-gaps notes.>
+<How tests are organized: framework, what's covered vs. not, how to run a
+single test/file, flaky-test or known-gaps notes. Exact commands belong in
+Verification below — don't invent a second conflicting command list.>
+
+## Verification
+
+<!--
+Canonical commands agents must use during Self-review. Only list commands
+that actually exist. Prefer one umbrella command (e.g. `pnpm verify`) when
+the project has it, rather than inventing a split. Omit subsections that
+don't apply — do not invent typecheck/lint/build if the project has none.
+-->
+
+### Canonical (preferred if present)
+
+```text
+command: <e.g. pnpm verify — or N/A>
+purpose: <what it runs>
+```
+
+### Test
+
+```text
+command: <or N/A — not supported / covered by Canonical>
+purpose:
+```
+
+### Typecheck
+
+```text
+command: <or N/A>
+purpose:
+```
+
+### Lint
+
+```text
+command: <or N/A>
+purpose:
+```
+
+### Format
+
+```text
+command: <or N/A — check-only if available>
+purpose:
+```
+
+### Build
+
+```text
+command: <or N/A>
+purpose:
+```
 
 ## Build / run / deploy commands
 
-<The actual commands: local dev server, build, lint, type-check, deploy.
-Exact, copy-pasteable.>
+<Local dev server, deploy, and other non-verify runbooks. Exact,
+copy-pasteable. Keep verification commands in Verification above so
+Self-review has one place to look.>
 
 ## Risky areas
 
