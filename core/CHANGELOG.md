@@ -19,6 +19,30 @@ Newest first.
 
 ---
 
+## 2026-10-15 — Claude Code adapter: cost defaults
+
+**Triggering project:** guibrief (Program v3 and the 110–115 batches).
+
+**What happened:** Claude Code's usage report showed 100% of a day's usage
+in subagent-heavy sessions and 84% at over 150k context. Every role
+inherited the session's top model; the implementer had the Agent tool and
+spawned the reviewer from inside itself (two nested cold contexts, each
+re-reading the kit); and the verify run printed one line per test (~800
+lines), which stayed in context for the rest of the session.
+
+**Fix:** The adapter's agent frontmatter now sets `model: sonnet` on
+planner and reviewer and drops `Agent` from the implementer. The main
+session implements an approved Ticket by default and always spawns the
+reviewer itself, so Review keeps its separate context and nothing else
+spawns by default. Audit commands should print a summary, and sessions
+`/clear` between Tickets. No change to Rules, Workflow gates or Evidence.
+
+**Files changed:** `adapters/claude-code/README.md`,
+`adapters/claude-code/CLAUDE.md.template`, `setup/attach.md`,
+`core/recipes/recipe-self-review.md`, this changelog.
+
+---
+
 ## 2026-10-06 — Stage 3: pre-review gates as the default inner loop
 
 **Triggering project:** Docket kit (Stage 2 complete; adversarial leftover

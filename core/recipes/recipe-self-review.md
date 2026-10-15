@@ -41,6 +41,10 @@ full `pre-review` (no skip) whenever the implementation changed.
 **implementation** change invalidates attestation — re-verify. Reviewer
 judgment is still required for AC adequacy; green gates ≠ proven criterion.
 
+Keep the Audit command's output short (a summary, not one line per test,
+or pipe it through `tail`): everything it prints stays in the session's
+context and is paid for again on every later turn.
+
 **Non-zero from any gate blocks Review handoff.** Fix the cause; do not
 report around it.
 
