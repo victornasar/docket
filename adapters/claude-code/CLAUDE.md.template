@@ -60,10 +60,14 @@ sourced from `<DOCKET_PATH>/core/roles/`:
 
 - **planner** — produces Tickets, no write access to code.
 - **implementer** — scoped to the approved Ticket; runs pre-review gates.
+  Optional: the main session normally implements an approved Ticket
+  itself (same Rules and scope), which saves a full extra context.
+  Spawn `implementer` only to keep a large implementation out of the
+  main session. It has no Agent tool, so it can't spawn the reviewer.
 - **reviewer** — read-only tools; audits Ticket Evidence and the diff
   before work is called done. Missing Evidence → send-back.
 
-**At Review, spawn the `reviewer` subagent via the Agent tool — do not
+**At Review, the main session spawns the `reviewer` subagent via the Agent tool — do not
 review the work in the same conversation that just implemented it.** Give
 it the Ticket path, and prefer also the output of
 `<DOCKET_PATH>/bin/docket review-packet <ticket.md>` (Baseline diff

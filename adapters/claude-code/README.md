@@ -31,17 +31,39 @@ Each role becomes an agent definition:
 
 - `.claude/agents/planner.md` — sourced from
   `docket/core/roles/planner.md`, with Claude Code's agent frontmatter
-  (name, description, and **no write tools** — this role plans, it doesn't
-  implement) added on top.
+  (name, description, `model: sonnet`, and **no write tools** — this role
+  plans, it doesn't implement) added on top.
 - `.claude/agents/implementer.md` — sourced from
   `docket/core/roles/implementer.md`, with full read/write/execute tools
-  scoped to the working directory.
+  scoped to the working directory, but **no `Agent` tool**: it never
+  spawns subagents (no nested reviewer). At Review handoff it stops and
+  reports the Ticket path and the `pre-review` result to the main
+  session, which spawns the reviewer.
 - `.claude/agents/reviewer.md` — sourced from
-  `docket/core/roles/reviewer.md`, with **read-only tools** in the
-  frontmatter (no `Edit`, `Write`, or any tool that mutates files). This is
+  `docket/core/roles/reviewer.md`, with `model: sonnet` and
+  **read-only tools** in the frontmatter (no `Edit`, `Write`, or any tool that mutates files). This is
   where the Reviewer's read-only requirement gets enforced mechanically,
   not just by convention — Claude Code's permission system is the actual
   gate.
+
+**Cost defaults.** Every subagent starts cold and re-reads the kit (Rules,
+Workflow, its role file, the Project Audit, CLAUDE.md), so each spawn is a
+full extra context. Hence:
+
+- **The main session implements an approved Ticket itself** under the same
+  Rules and scope. Spawn `implementer` only to keep a large implementation
+  out of the main context (or for Parallel Line, below).
+- **The main session spawns the reviewer.** Only the Review needs a
+  separate context; that is where independence comes from.
+- **Planner and reviewer run on `model: sonnet`.** The reviewer audits
+  Evidence and a diff; a project that wants the strongest audit can drop
+  the line to inherit the session's model.
+- **Keep verify output short.** A project's Audit command should print a
+  summary, not one line per test (e.g. Playwright's `dot` reporter
+  locally), or pipe it through `tail`. Long logs are paid for again on
+  every later turn.
+- **`/clear` between Tickets**, including inside a batch; the Ticket files
+  carry the state.
 
 **These are meant to be invoked as real subagents, not just documented as
 a mapping.** At Review (see `WORKFLOW.md`), the session that just ran
@@ -82,12 +104,14 @@ for it, not an approximation:
    don't rely on each Implementer to notice a conflict after the fact.
 2. Create one `git worktree` per Ticket being started, per
    `PARALLEL_LINE.md`'s naming convention.
-3. Spawn one `implementer` subagent per Ticket via the Agent tool, each
+3. Spawn one `implementer` subagent per Ticket via the Agent tool (the
+   costly path: one full context per Ticket, so use it only when the
+   parallelism is worth it), each
    given its own worktree path and told to work exclusively within it —
    in a tool that supports backgrounding subagent calls, run them
    backgrounded so they actually proceed concurrently rather than one
    blocking the next.
-4. As each finishes Self-review, spawn its `reviewer` subagent the same
+4. As each finishes Self-review, the main session spawns its `reviewer` subagent the same
    way Review normally works (see above), pointed at that Ticket's branch
    diff specifically.
 5. On a pass, merge that Ticket's branch back per `PARALLEL_LINE.md`'s

@@ -41,6 +41,10 @@ full `pre-review` (no skip) whenever the implementation changed.
 **implementation** change invalidates attestation — re-verify. Reviewer
 judgment is still required for AC adequacy; green gates ≠ proven criterion.
 
+Keep the Audit command's output short (a summary, not one line per test,
+or pipe it through `tail`): everything it prints stays in the session's
+context and is paid for again on every later turn.
+
 **Non-zero from any gate blocks Review handoff.** Fix the cause; do not
 report around it.
 
@@ -52,6 +56,8 @@ report around it.
 
 3. **Fill per-AC Evidence** (`method`, `how`, `result`, `evidence`). Manual
    is allowed when judgment is genuine — not a substitute for automation.
+   For `method: test`, list test titles under `tests:` in place of prose
+   `evidence:` — see [Evidence by test reference](#evidence-by-test-reference).
 
 4. **Run `docket pre-review <ticket> --audit PROJECT_AUDIT.md`** (or
    `verify` alone). Copy the Project verify block into the Ticket
@@ -81,11 +87,38 @@ tree_fingerprint: <from attestation>
 attestation: <.docket/verify/….json>
 ```
 
+## Evidence by test reference
+
+An AC may list test titles under `tests:`, one per line, in place of prose
+`evidence:`:
+
+```text
+id: AC-2
+criterion: rejects a bad password
+method: test
+how: npx playwright test tests/login.spec.ts
+result: pass
+tests:
+- auth › rejects bad password
+- auth › locks after five tries
+```
+
+`docket check-evidence` reads the attested verify log. It passes only if
+every title appears on a passed line, and fails, naming the title, if one
+is missing or appears as failed or skipped. Matching is a plain substring
+on the log line, so give full, unique titles (for pytest, the `path::name`
+node id): `test_foo` also matches `test_foo_bar`. The titles must appear
+in the verify output, so these ACs need a per-test reporter. Recognized
+log formats are listed in [`tooling/README.md`](../../tooling/README.md).
+Prose `evidence:` remains valid.
+
 ## Self-review checklist
 
 - [ ] Baseline set; Ticket re-read.
-- [ ] Per-AC Evidence filled.
-- [ ] `docket pre-review` (verify → check-scope → check-evidence) exit 0.
+- [ ] Per-AC Evidence filled; any `tests:` titles are full and unique.
+- [ ] `docket pre-review` (lint-ticket → verify → check-scope →
+      check-evidence, which also checks `tests:` titles against the
+      attested log) exit 0.
 - [ ] Project verify copied from attestation (not invented).
 - [ ] No debug artifacts / secrets; rollback accurate.
 - [ ] Review packet available for fresh-context Reviewer.

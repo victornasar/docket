@@ -82,8 +82,9 @@ Pick the adapter matching the tool this project uses:
 3. Create `.claude/agents/planner.md`, `.claude/agents/implementer.md`,
    and `.claude/agents/reviewer.md`, sourced from
    `docket/core/roles/*.md`, with tool permissions set per the adapter
-   README (planner: no write tools; implementer: full read/write/execute;
-   reviewer: read-only).
+   README (planner: no write tools, `model: sonnet`; implementer: full
+   read/write/execute, no `Agent` tool; reviewer: read-only,
+   `model: sonnet`).
 
 **Cursor:**
 1. Read [`../adapters/cursor/README.md`](../adapters/cursor/README.md).

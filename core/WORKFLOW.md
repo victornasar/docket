@@ -213,6 +213,20 @@ rather than extending an already-long one indefinitely, is the default,
 not something to only consider once a session is struggling under its own
 size.
 
+**The default ending of every Ticket:**
+
+1. Commit the work together with the Ticket marked `done`.
+2. Run `docket done <ticket>`. It refuses unless the Ticket says `done`,
+   the tree is clean, and the last commit touches the Ticket. It then
+   prints the next Ticket, if a program file such as `tickets/README.md`
+   lists one, and the line *"Start a fresh session (/clear) before the next
+   Ticket."* It changes no files.
+3. Start a fresh session and run `docket resume [<ticket>]`. It prints a
+   brief of under 40 lines: title, status, Baseline, each AC's state,
+   whether the last attestation is fresh, and the files changed since
+   Baseline (untracked included). Read that brief and the Ticket, not the
+   old transcript.
+
 ## Summary table
 
 | Stage | Owner | Produces | Exit gate |

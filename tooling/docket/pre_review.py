@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .check_evidence import check_evidence
 from .check_scope import check_scope
+from .lint_ticket import lint_ticket
 from .verify_cmd import format_evidence_block, verify
 
 
@@ -26,7 +27,10 @@ def pre_review(
 ) -> PreReviewResult:
     """Run mechanical gates in the only valid order before Review.
 
-    Order: verify (unless skipped) → check-scope → check-evidence.
+    Order: lint-ticket → verify (unless skipped) → check-scope → check-evidence.
+
+    `lint-ticket` runs first so format errors surface before the (possibly
+    slow) verify command.
 
     `verify` must precede `check-evidence` because Evidence must match a
     real attestation. Non-zero from any step blocks Review handoff.
@@ -34,6 +38,18 @@ def pre_review(
     """
     messages: list[str] = []
     ticket_path = ticket_path.resolve()
+
+    messages.append("=== docket lint-ticket ===")
+    lint = lint_ticket(ticket_path, baseline_override=baseline)
+    messages.extend(lint.messages)
+    if not lint.ok:
+        messages.append("")
+        messages.append(
+            "BLOCKED: lint-ticket failed. Fix the Ticket's structure, "
+            "then re-run — do not hand off to Review."
+        )
+        return PreReviewResult(ok=False, exit_code=1, messages=messages)
+    messages.append("")
 
     if not skip_verify:
         if audit_path is None:

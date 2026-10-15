@@ -5,3 +5,6 @@ tooling/.venv/
 tooling/**/__pycache__/
 *.pyc
 .Python
+
+# OS files
+.DS_Store

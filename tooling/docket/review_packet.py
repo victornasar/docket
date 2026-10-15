@@ -3,7 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .parse import load_ticket
+from .gitutil import GitError, run_git
+from .parse import load_ticket, path_allowed
 
 
 @dataclass
@@ -52,8 +53,14 @@ def build_review_packet(ticket_path: Path, repo: Path) -> ReviewPacket:
 
     if ticket.baseline:
         lines.append(f"diff_command: git diff {ticket.baseline}")
+        lines.append(f"diff_stat: {diff_stat(repo, ticket.baseline)}")
     else:
         lines.append("diff_command: git diff <Baseline from Ticket>")
+        lines.append("diff_stat: (no Baseline)")
+
+    untracked = untracked_in_scope(repo, ticket.files_touched)
+    lines.append("untracked: (new files `git diff` does not show)" if untracked else "untracked: none")
+    lines.extend(f"  - {p}" for p in untracked)
 
     lines.append("")
     if docket:
@@ -89,3 +96,22 @@ def build_review_packet(ticket_path: Path, repo: Path) -> ReviewPacket:
         ]
     )
     return ReviewPacket(lines=lines)
+
+
+def diff_stat(repo: Path, baseline: str) -> str:
+    """One-line `git diff --shortstat` vs Baseline (tracked files only)."""
+    try:
+        out = run_git(repo, "diff", "--shortstat", baseline).strip()
+    except GitError as e:
+        return f"(unavailable: {e})"
+    return out or "no tracked changes"
+
+
+def untracked_in_scope(repo: Path, files_touched: list[str]) -> list[str]:
+    """Untracked (`??`) paths that fall under Files touched."""
+    porcelain = run_git(repo, "status", "--porcelain=v1", "-uall")
+    return [
+        line[3:]
+        for line in porcelain.splitlines()
+        if line.startswith("?? ") and path_allowed(line[3:], files_touched)
+    ]
