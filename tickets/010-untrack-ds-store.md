@@ -1,6 +1,6 @@
 # Ticket: Stop tracking `.DS_Store` files
 
-**Status:** in-review
+**Status:** done
 **Owner (Implementer):** Claude
 **Retry count:** 0
 **Related project audit:** N/A — this repo
@@ -89,3 +89,5 @@ notes: the two .DS_Store files are removed from the index only; they remain on d
 ```
 
 ## Notes for the Reviewer
+
+Review (independent, Sonnet): Pass, no blocking findings.

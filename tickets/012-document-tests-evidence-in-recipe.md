@@ -1,6 +1,6 @@
 # Ticket: Document `tests:` Evidence in the self-review recipe
 
-**Status:** in-review
+**Status:** done
 **Owner (Implementer):** Claude
 **Retry count:** 0
 **Related project audit:** N/A — this repo
@@ -88,3 +88,5 @@ notes:
 ```
 
 ## Notes for the Reviewer
+
+Review (independent, Sonnet): Pass, no blocking findings.

@@ -1,6 +1,6 @@
 # Ticket: Bring `tickets/README.md` up to date
 
-**Status:** in-review
+**Status:** done
 **Owner (Implementer):** Claude
 **Retry count:** 0
 **Related project audit:** N/A — this repo
@@ -77,7 +77,7 @@ method: command
 how: tooling/.venv/bin/python -c "from docket.done_cmd import next_ticket; print(next_ticket(Path('../tickets/009-token-efficiency.md')))"
 result: pass
 evidence: ../tickets/010-untrack-ds-store.md
-notes: docket done itself refuses until this batch is committed (dirty tree), so the same next_ticket() it calls was run directly. docket done will be re-run on 009 after commit.
+notes: docket done itself refuses until this batch is committed (dirty tree), so the same next_ticket() it calls was run directly. After commit, docket done on 009 refuses because the last commit no longer touches 009, which is expected; Review re-ran next_ticket() and got 010.
 
 id: AC-4
 criterion: Every remaining Deferred item is checked against the repo and still open
@@ -98,3 +98,5 @@ notes:
 ```
 
 ## Notes for the Reviewer
+
+Review (independent, Sonnet): Pass, no blocking findings.
