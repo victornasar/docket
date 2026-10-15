@@ -8,9 +8,12 @@ from pathlib import Path
 from . import __version__
 from .check_evidence import check_evidence
 from .check_scope import check_scope
+from .done_cmd import done
 from .gitutil import GitError, is_git_repo
+from .lint_ticket import lint_ticket
 from .parse import ParseError
 from .pre_review import pre_review
+from .resume_cmd import resume
 from .review_packet import build_review_packet
 from .verify_cmd import format_evidence_block, verify
 
@@ -95,7 +98,8 @@ def main(argv: list[str] | None = None) -> int:
 
     p_pre = sub.add_parser(
         "pre-review",
-        help="Mandatory gate sequence before Review: verify → check-scope → check-evidence",
+        help="Mandatory gate sequence before Review: "
+        "lint-ticket → verify → check-scope → check-evidence",
     )
     _add_repo_arg(p_pre)
     p_pre.add_argument("ticket", type=Path)
@@ -122,6 +126,39 @@ def main(argv: list[str] | None = None) -> int:
     )
     _add_repo_arg(p_pkt)
     p_pkt.add_argument("ticket", type=Path)
+
+    p_lint = sub.add_parser(
+        "lint-ticket",
+        help="Structural Ticket checks (headers, methods, Files touched, Baseline)",
+    )
+    _add_repo_arg(p_lint)
+    p_lint.add_argument("ticket", type=Path)
+
+    p_done = sub.add_parser(
+        "done",
+        help="Confirm a Done Ticket is committed; print the session handoff",
+    )
+    _add_repo_arg(p_done)
+    p_done.add_argument("ticket", type=Path)
+    p_done.add_argument(
+        "--program",
+        type=Path,
+        default=None,
+        help="File listing Tickets in order (default: non-Ticket .md beside it)",
+    )
+
+    p_res = sub.add_parser(
+        "resume",
+        help="Compact brief for starting a fresh session on a Ticket",
+    )
+    _add_repo_arg(p_res)
+    p_res.add_argument(
+        "ticket",
+        type=Path,
+        nargs="?",
+        default=None,
+        help="Ticket path (default: most recent open Ticket under tickets/)",
+    )
 
     args = parser.parse_args(argv)
     repo = args.repo.resolve()
@@ -186,6 +223,28 @@ def main(argv: list[str] | None = None) -> int:
             for line in result.messages:
                 print(line)
             return result.exit_code
+
+        if args.cmd == "lint-ticket":
+            result = lint_ticket(args.ticket.resolve())
+            for line in result.messages:
+                print(line)
+            return 0 if result.ok else 1
+
+        if args.cmd == "done":
+            result = done(
+                args.ticket.resolve(),
+                repo,
+                program=args.program.resolve() if args.program else None,
+            )
+            for line in result.messages:
+                print(line)
+            return 0 if result.ok else 1
+
+        if args.cmd == "resume":
+            result = resume(repo, args.ticket.resolve() if args.ticket else None)
+            for line in result.lines:
+                print(line)
+            return 0 if result.ok else 1
 
         if args.cmd == "review-packet":
             packet = build_review_packet(args.ticket.resolve(), repo)

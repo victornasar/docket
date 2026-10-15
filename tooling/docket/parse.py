@@ -9,6 +9,9 @@ class ParseError(ValueError):
     pass
 
 
+VALID_METHODS = {"test", "command", "manual", "artifact"}
+
+
 @dataclass
 class AcEvidence:
     id: str
@@ -18,6 +21,7 @@ class AcEvidence:
     result: str = ""
     evidence: str = ""
     notes: str = ""
+    tests: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -44,6 +48,7 @@ class Ticket:
     path: Path
     raw: str
     title: str = ""
+    status: str = ""
     baseline: str = ""
     files_touched: list[str] = field(default_factory=list)
     ac_ids: list[str] = field(default_factory=list)
@@ -59,6 +64,7 @@ def load_ticket(path: Path) -> Ticket:
     raw = path.read_text(encoding="utf-8")
     ticket = Ticket(path=path, raw=raw)
     ticket.title = _first_heading(raw)
+    ticket.status = _meta_field(raw, "Status").lower()
     ticket.baseline = _meta_field(raw, "Baseline")
     ticket.files_touched = _parse_files_touched(raw)
     ticket.ac_ids = _parse_ac_ids(raw)
@@ -226,9 +232,34 @@ def _parse_ac_evidence(evidence_src: str) -> list[AcEvidence]:
                 result=kv.get("result", ""),
                 evidence=kv.get("evidence", ""),
                 notes=kv.get("notes", ""),
+                tests=_parse_tests_field(chunk),
             )
         )
     return out
+
+
+def _parse_tests_field(chunk: str) -> list[str]:
+    """`tests:` takes one test title per following `- ` line (or one inline)."""
+    titles: list[str] = []
+    in_tests = False
+    for line in chunk.splitlines():
+        stripped = line.strip()
+        if in_tests:
+            if stripped.startswith("- "):
+                title = stripped[2:].strip()
+                if title:
+                    titles.append(title)
+                continue
+            if not stripped:
+                continue
+            break
+        m = _KV.match(stripped)
+        if m and m.group(1) == "tests":
+            in_tests = True
+            inline = m.group(2).strip()
+            if inline and not inline.startswith("<"):
+                titles.append(inline)
+    return titles
 
 
 def _parse_scope_review(evidence_src: str) -> ScopeReview:

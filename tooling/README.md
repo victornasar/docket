@@ -22,6 +22,13 @@ establish that an acceptance criterion is adequate or that Evidence proves it.
 
 # Fresh-context Reviewer discovery (no chat history)
 ./bin/docket review-packet path/to/ticket.md
+
+# Structure only, no diff or verify (pre-review runs this first)
+./bin/docket lint-ticket path/to/ticket.md
+
+# Session boundary: after the Done commit, then in the fresh session
+./bin/docket done path/to/ticket.md [--program tickets/README.md]
+./bin/docket resume [path/to/ticket.md]
 ```
 
 Or: `PYTHONPATH=/path/to/docket/tooling python3 -m docket …`
@@ -29,6 +36,43 @@ Or: `PYTHONPATH=/path/to/docket/tooling python3 -m docket …`
 Order matters: **`verify` before `check-evidence`** (attestation must exist).
 
 Non-zero from `pre-review` **blocks** Review handoff — fix the cause.
+
+## Evidence by test reference
+
+An AC may list test titles under `tests:` in place of prose `evidence:`:
+
+```text
+id: AC-3
+criterion: rejects a bad password
+method: test
+how: npx playwright test tests/login.spec.ts
+result: pass
+tests:
+- auth › rejects bad password
+- auth › locks after five tries
+```
+
+`check-evidence` reads the attested verify log and fails, naming the
+title, if any title is missing or appears on a failed or skipped line.
+Matching is a plain substring on the line, so give full, unique titles
+(for pytest, the `path::name` node id): `test_foo` also matches `test_foo_bar`. Recognized formats: Playwright
+list reporter (`✓` / `✘` / `-`) and pytest (`PASSED` / `FAILED` /
+`ERROR` / `SKIPPED` / `XFAIL`). Titles must appear in the verify output,
+so a summary-only reporter needs a per-test reporter for these ACs.
+Prose `evidence:` remains valid.
+
+## Session boundary
+
+`docket done <ticket>` checks that the Ticket says `done`, the tree is clean
+(ignoring `.docket/`), and the last commit touches the Ticket. It then
+prints the next Ticket from a program file (`--program`, or any non-Ticket
+`.md` beside the Ticket that lists it, such as `tickets/README.md`) and
+the fresh-session line. It writes nothing.
+
+`docket resume [<ticket>]` prints a brief of under 40 lines: title, status,
+Baseline, AC states, attestation freshness, and changed files with
+untracked ones marked. Without a Ticket argument, it picks the most
+recently modified open Ticket under `tickets/`.
 
 ## Escape hatches (not the normal path)
 
@@ -57,9 +101,12 @@ cleaned or gitignored. That is project hygiene, not a Docket special case.
 |---|---|---|
 | `verify` | Audit command actually ran; exit/log/HEAD/fingerprint captured | Tests prove each AC |
 | `check-scope` | diff since Baseline ⊆ Files Touched (+ `tickets/`, `.docket/`, `PROJECT_AUDIT.md`) | In-scope edits are correct |
-| `check-evidence` | Evidence structure; Markdown matches attestation; not stale | AC adequacy |
-| `pre-review` | All three above, in order | AC adequacy |
-| `review-packet` | Lists repo paths for a fresh Reviewer | Anything about correctness |
+| `check-evidence` | Evidence structure; Markdown matches attestation; not stale; `tests:` titles passed in the log | AC adequacy |
+| `lint-ticket` | Required headers, valid methods, one path per Files touched line, Baseline shape | Anything about the diff |
+| `pre-review` | lint-ticket, then the three above, in order | AC adequacy |
+| `review-packet` | Lists repo paths, untracked in-scope files, diff stat for a fresh Reviewer | Anything about correctness |
+| `done` | Ticket is `done`, committed, tree clean | That Review happened |
+| `resume` | Nothing; it is a summary for a fresh session | Anything |
 
 ## Attestation / stale binding
 

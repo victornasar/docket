@@ -19,6 +19,36 @@ Newest first.
 
 ---
 
+## 2026-10-15 — Session boundaries and cheaper Evidence (Ticket 009)
+
+**Triggering project:** guibrief (Program v3, Tickets 093–101, one session).
+
+**What happened:** 822 model calls re-sent 211M cached input tokens (~99%
+of input). The median call carried a 233k-token conversation. Late
+Tickets cost 25–29M tokens each, and the Ticket right after an automatic
+summary cost 7.8M for the same kind of work. Reviewer passes were ~0.5% of
+the total and caught real bugs. The cost was long sessions, not gates.
+WORKFLOW.md already called Done a session boundary, but nothing enforced
+it. Smaller round-trips came from 8–10KB of hand-written Evidence per
+Ticket, format errors that surfaced only at `pre-review`, and a
+`review-packet` that left out new untracked files.
+
+**Fix:** `docket done` checks that a Ticket is closed out and prints the
+handoff with the fresh-session line. `docket resume` prints a brief of
+under 40 lines for the new session. An AC may now give `tests:` (test
+titles) in place of prose `evidence:`, and `check-evidence` checks each
+title against the attested verify log (Playwright and pytest formats).
+`docket lint-ticket` runs first in `pre-review`. `review-packet` lists
+untracked in-scope files and a diff stat. Prose Evidence stays valid, and
+no gate got weaker.
+
+**Files changed:** `tooling/docket/*` (new `done_cmd.py`, `resume_cmd.py`,
+`lint_ticket.py`), `tooling/tests/*`, `tooling/README.md`,
+`core/WORKFLOW.md`, `core/roles/implementer.md`,
+`core/templates/ticket.template.md`, this changelog.
+
+---
+
 ## 2026-10-15 — Claude Code adapter: cost defaults
 
 **Triggering project:** guibrief (Program v3 and the 110–115 batches).

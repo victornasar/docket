@@ -257,3 +257,116 @@ def test_stale_after_edit(git_repo: Path):
     result = check_evidence(ticket, git_repo)
     assert not result.ok
     assert any("STALE" in m for m in result.messages)
+
+
+# --- `tests:` evidence (verified against the attested verify log) ---
+
+from docket.check_evidence import title_problems  # noqa: E402
+
+PLAYWRIGHT_LOG = """\
+Running 4 tests using 2 workers
+  ✓  1 [chromium] › tests/login.spec.ts:5:3 › auth › logs in with email (1.2s)
+  ✘  2 [chromium] › tests/login.spec.ts:20:3 › auth › rejects bad password (3.0s)
+  -  3 [chromium] › tests/login.spec.ts:31:3 › auth › signs up with SSO
+  ✓  4 [chromium] › tests/cart.spec.ts:8:3 › cart › adds an item (0.8s)
+  1 failed
+"""
+
+PYTEST_LOG = """\
+tests/test_cart.py::test_add_item PASSED                                 [ 25%]
+tests/test_cart.py::test_remove_item FAILED                              [ 50%]
+tests/test_cart.py::test_discount SKIPPED (no coupon service)            [ 75%]
+tests/test_cart.py::test_total PASSED                                    [100%]
+FAILED tests/test_cart.py::test_remove_item - AssertionError: 1 != 0
+"""
+
+
+def test_title_problems_playwright():
+    assert title_problems(["logs in with email", "adds an item"], PLAYWRIGHT_LOG) == []
+    problems = title_problems(
+        ["rejects bad password", "signs up with SSO", "logs out"], PLAYWRIGHT_LOG
+    )
+    assert "FAILED" in problems[0] and "rejects bad password" in problems[0]
+    assert "SKIPPED" in problems[1] and "signs up with SSO" in problems[1]
+    assert "not found" in problems[2] and "logs out" in problems[2]
+
+
+def test_title_problems_pytest():
+    assert title_problems(["test_add_item", "test_total"], PYTEST_LOG) == []
+    problems = title_problems(["test_remove_item", "test_discount", "test_gone"], PYTEST_LOG)
+    assert "FAILED" in problems[0]
+    assert "SKIPPED" in problems[1]
+    assert "not found" in problems[2]
+
+
+def _tests_evidence(att, latest, tests: list[str], with_prose: bool = False) -> str:
+    titles = "\n".join(f"- {t}" for t in tests)
+    prose = f"evidence: {att.log}\n" if with_prose else ""
+    return f"""
+### Project verify
+
+```text
+command: {att.command}
+exit: {att.exit}
+log: {att.log}
+ran_at: {att.ran_at}
+git_head: {att.git_head}
+tree_fingerprint: {att.tree_fingerprint}
+attestation: {latest["attestation"]}
+```
+
+### Acceptance criteria
+
+```text
+id: AC-1
+criterion: does the thing
+method: test
+how: npx playwright test
+result: pass
+{prose}tests:
+{titles}
+notes:
+```
+
+### Scope review
+
+```text
+diff_vs_files_touched: match
+extras: none
+justified: n/a
+notes: none
+```
+"""
+
+
+def _run_with_log(git_repo: Path, log_text: str, tests: list[str]):
+    # Exit 0 even with a failed line in the log: the title check must catch it.
+    (git_repo / "run.log").write_text(log_text, encoding="utf-8")
+    _git(git_repo, "add", "run.log")
+    _git(git_repo, "commit", "-m", "fixture")
+    write_audit(git_repo, "cat run.log")
+    ticket = write_ticket(git_repo, files=["README.md"])
+    att = verify(git_repo, git_repo / "PROJECT_AUDIT.md", ticket)
+    latest = json.loads((git_repo / ".docket/verify/latest.json").read_text())
+    ticket = write_ticket(
+        git_repo, files=["README.md"], evidence=_tests_evidence(att, latest, tests)
+    )
+    return check_evidence(ticket, git_repo)
+
+
+def test_tests_evidence_passes_without_prose(git_repo: Path):
+    result = _run_with_log(git_repo, PLAYWRIGHT_LOG, ["logs in with email", "adds an item"])
+    assert result.ok, result.messages
+
+
+def test_tests_evidence_fails_naming_title(git_repo: Path):
+    result = _run_with_log(git_repo, PYTEST_LOG, ["test_add_item", "test_remove_item"])
+    assert not result.ok
+    assert any("AC-1" in m and "test_remove_item" in m for m in result.messages)
+    assert not any("test_add_item" in m for m in result.messages if m.startswith("FAIL"))
+
+
+def test_tests_evidence_missing_title_fails(git_repo: Path):
+    result = _run_with_log(git_repo, PYTEST_LOG, ["test_never_ran"])
+    assert not result.ok
+    assert any("test_never_ran" in m and "not found" in m for m in result.messages)

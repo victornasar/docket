@@ -36,6 +36,8 @@ Pass decide that.
   specifically — don't re-implement from scratch or introduce unrelated
   changes while fixing it. Re-run `docket verify` after implementation
   changes (old attestation becomes stale).
+- End the session at Done (`docket done <ticket>`). Begin the next one
+  with `docket resume`.
 
 ## Tool / permission boundaries
 

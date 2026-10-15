@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from .gitutil import rev_parse, tree_fingerprint
-from .parse import load_ticket
-
-VALID_METHODS = {"test", "command", "manual", "artifact"}
+from .parse import VALID_METHODS, load_ticket
 
 
 @dataclass
@@ -50,7 +49,10 @@ def check_evidence(
         if ev is None:
             fail(f"{ac_id}: missing Evidence record")
             continue
-        for field_name in ("criterion", "method", "how", "result", "evidence"):
+        required = ("criterion", "method", "how", "result")
+        if not ev.tests:
+            required += ("evidence",)
+        for field_name in required:
             val = getattr(ev, field_name).strip()
             if not val or val.startswith("<"):
                 fail(f"{ac_id}: '{field_name}' is empty")
@@ -116,6 +118,12 @@ def check_evidence(
                         fail=fail,
                         ticket_path=ticket_path,
                     )
+                    _check_tests_evidence(ticket.ac_evidence, data, repo, fail=fail)
+    elif any(ev.tests for ev in ticket.ac_evidence):
+        messages.append(
+            "WARN: `tests:` evidence not checked against a verify log "
+            "(--skip-attestation)"
+        )
 
     if ok:
         messages.append(
@@ -179,3 +187,54 @@ def _cross_check_attestation(
                 "Attestation is STALE: git_head does not match "
                 "current HEAD (re-run `docket verify`)"
             )
+
+
+# Per-runner adapters: classify a log line that mentions a test title.
+# Playwright list reporter: "  ✓  3 [chromium] › a.spec.ts:4:5 › suite › title (1.2s)"
+#   failed "  ✘  …", skipped "  -  …". pytest -v: "path::name PASSED [ 50%]";
+#   pytest -rA summary: "PASSED path::name", "FAILED path::name - msg".
+_FAILED = re.compile(r"^\s*[✘✗×]\s|\b(FAILED|ERROR)\b")
+_SKIPPED = re.compile(r"^\s*-\s+\d+\s|\b(SKIPPED|XFAIL)\b")
+_PASSED = re.compile(r"^\s*[✓✔]\s|\bPASSED\b")
+
+
+def classify_test_line(line: str) -> str | None:
+    if _FAILED.search(line):
+        return "failed"
+    if _SKIPPED.search(line):
+        return "skipped"
+    if _PASSED.search(line):
+        return "passed"
+    return None
+
+
+def title_problems(titles: list[str], log_text: str) -> list[str]:
+    """One message per title that is missing, failed, or skipped in the log."""
+    lines = log_text.splitlines()
+    problems: list[str] = []
+    for title in titles:
+        states = {
+            classify_test_line(line) for line in lines if title in line
+        } - {None}
+        if "failed" in states:
+            problems.append(f"test {title!r} FAILED in verify log")
+        elif "skipped" in states:
+            problems.append(f"test {title!r} was SKIPPED in verify log")
+        elif "passed" not in states:
+            problems.append(f"test {title!r} not found as passed in verify log")
+    return problems
+
+
+def _check_tests_evidence(ac_evidence, data, repo: Path, *, fail) -> None:
+    with_tests = [ev for ev in ac_evidence if ev.tests]
+    if not with_tests:
+        return
+    log_rel = str(data.get("log", "")).strip()
+    log_path = Path(log_rel) if Path(log_rel).is_absolute() else repo / log_rel
+    if not log_rel or not log_path.is_file():
+        fail(f"`tests:` evidence needs the attested verify log (not found: {log_rel!r})")
+        return
+    log_text = log_path.read_text(encoding="utf-8", errors="replace")
+    for ev in with_tests:
+        for problem in title_problems(ev.tests, log_text):
+            fail(f"{ev.id}: {problem}")

@@ -100,6 +100,16 @@ notes: <optional>
 
 id: AC-2
 criterion:
+method: test
+how: <exact test command>
+result: pass
+tests:
+- <test title as it appears in the verify log, one per line>
+notes: <`tests:` replaces prose `evidence:`; check-evidence passes only
+  if every title is a passed line in the attested verify log>
+
+id: AC-3
+criterion:
 method:
 how:
 result:
