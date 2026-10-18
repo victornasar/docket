@@ -112,6 +112,25 @@ it was verified and what evidence supports the claim.**
   actually built (if the implementation diverged from the plan, the
   rollback plan is updated to match).
 
+### Keeping verification cheap
+
+Test output is the largest thing an agent can pull into its context. So:
+
+- Run the suite through `docket verify` or `docket pre-review`, never
+  through the raw test command. The output goes to `.docket/verify/*.log`,
+  not into the conversation.
+- On failure, read the **failure digest** they print (at most 40 lines:
+  the failing lines with their log line numbers, then the log's tail).
+  Then read only the log lines it points to (`sed -n '120,160p' <log>`),
+  never the whole log.
+- The human may run `docket pre-review` in their own terminal and report
+  just the exit code and the digest. The attestation on disk is the same,
+  so it counts as Evidence either way.
+- Every new session or subagent pays a fixed start-up cost (tool and
+  plugin definitions). Give one Reviewer a whole batch of related Tickets
+  rather than one Reviewer each, and turn off plugins the project doesn't
+  use (`setup/attach.md`, Step 6).
+
 ## Stage 4 — Review
 
 **Owner:** Reviewer.

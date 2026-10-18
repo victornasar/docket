@@ -15,7 +15,7 @@ from .parse import ParseError
 from .pre_review import pre_review
 from .resume_cmd import resume
 from .review_packet import build_review_packet
-from .verify_cmd import format_evidence_block, verify
+from .verify_cmd import DIGEST_LINES, failure_digest, format_evidence_block, verify
 
 
 def _add_repo_arg(p: argparse.ArgumentParser) -> None:
@@ -95,6 +95,12 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Print attestation JSON only",
     )
+    p_ver.add_argument(
+        "--digest-lines",
+        type=int,
+        default=DIGEST_LINES,
+        help=f"On failure, print at most N lines of failure digest (default {DIGEST_LINES}; 0 = off)",
+    )
 
     p_pre = sub.add_parser(
         "pre-review",
@@ -118,6 +124,12 @@ def main(argv: list[str] | None = None) -> int:
         "--baseline",
         default=None,
         help="Override Ticket Baseline for check-scope",
+    )
+    p_pre.add_argument(
+        "--digest-lines",
+        type=int,
+        default=DIGEST_LINES,
+        help=f"On failure, print at most N lines of failure digest (default {DIGEST_LINES}; 0 = off)",
     )
 
     p_pkt = sub.add_parser(
@@ -209,6 +221,10 @@ def main(argv: list[str] | None = None) -> int:
                         att, str(data.get("attestation", ".docket/verify/latest.json"))
                     )
                 )
+                if att.exit != 0 and args.digest_lines > 0:
+                    print()
+                    for line in failure_digest(repo / att.log, args.digest_lines):
+                        print(line)
             return 0 if att.exit == 0 else 1
 
         if args.cmd == "pre-review":
@@ -219,6 +235,7 @@ def main(argv: list[str] | None = None) -> int:
                 audit_path=audit,
                 skip_verify=args.skip_verify,
                 baseline=args.baseline,
+                digest_lines=args.digest_lines,
             )
             for line in result.messages:
                 print(line)
