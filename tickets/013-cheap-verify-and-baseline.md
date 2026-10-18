@@ -1,6 +1,6 @@
 # Ticket: Keep test output and session baseline out of the model's context
 
-**Status:** implemented 2026-10-17, awaiting independent Review (owner: "okay do it", approving the Ticket and the `core/` CONFIRM)
+**Status:** done
 **Owner (Implementer):** Claude
 **Retry count:** 0
 **Related project audit:** N/A — this repo
@@ -65,13 +65,84 @@ Revert the commit. The digest is output only: no attestation or log format chang
 
 ## Evidence
 
-<!-- Filled during Self-review. -->
+### Project verify
+
+```text
+command: tooling/.venv/bin/pytest -v -p no:cacheprovider tooling
+exit: 0
+log: .docket/verify/013-cheap-verify-and-baseline-20261018T044516Z.log
+ran_at: 2026-10-18T04:45:16Z
+git_head: 00879c4b69db972e77fce26b27b6aff568ff046a
+tree_fingerprint: 87b4c7cab0c4f47ab170c4747c337757db82fc89b93212b85802584c42a89030
+attestation: .docket/verify/013-cheap-verify-and-baseline-20261018T044516Z.json
+```
+
+### Acceptance criteria
+
+```text
+id: AC-1
+criterion: A failing verify prints a digest of at most 40 lines (by default) with failure lines and their log line numbers. A passing verify prints none
+method: test
+how: tooling/.venv/bin/pytest -v -p no:cacheprovider tooling
+result: pass
+tests:
+- test_failing_verify_digest_points_at_failures
+- test_cli_digest_only_on_failure_and_switchable
+
+id: AC-2
+criterion: --digest-lines 0 turns the digest off; the log file and attestation JSON are unchanged by the digest
+method: test
+how: tooling/.venv/bin/pytest -v -p no:cacheprovider tooling
+result: pass
+tests:
+- test_digest_is_capped
+- test_cli_digest_only_on_failure_and_switchable
+
+id: AC-3
+criterion: core/WORKFLOW.md and the self-review recipe say: run through docket, read the digest not the whole log; the human may run pre-review themselves; one Reviewer per batch
+method: manual
+how: read core/WORKFLOW.md "Keeping verification cheap" and the recipe paragraph before "Evidence schema (Project verify)"
+result: pass
+evidence: WORKFLOW.md section has all four points (docket not raw command; digest then only named lines; human may run pre-review, attestation counts; one Reviewer per batch + unused plugins); the recipe paragraph points at it
+notes: the digest only adds output; failure_digest reads the log and writes nothing (verify_cmd.py)
+
+id: AC-4
+criterion: setup/attach.md covers turning off unused plugins per project
+method: manual
+how: read setup/attach.md Step 6
+result: pass
+evidence: Step 6 gives the .claude/settings.local.json enabledPlugins form, /plugin to list, and keeping the file out of git
+notes:
+
+id: AC-5
+criterion: The existing tooling tests pass
+method: test
+how: tooling/.venv/bin/pytest -v -p no:cacheprovider tooling
+result: pass
+evidence: 49 passed in the attested log (46 existing + 3 new)
+notes:
+```
+
+### Scope review
+
+```text
+diff_vs_files_touched: match
+extras: none
+justified: n/a
+notes: guibrief's CLAUDE.md line (a8bc10b) is in the guibrief repo, not this one
+```
 
 ## Notes for the Reviewer
 
 - Done outside this Ticket, as local config with no repo change: `.claude/settings.local.json` in guibrief and in docket turns off the Vercel and Swift LSP plugins. The file is excluded with `.git/info/exclude`.
-- Self-review: `tooling/.venv/bin/pytest -q -p no:cacheprovider tooling` → 49 passed. That includes the three new digest tests (`-k digest` → 3 passed). `docket pre-review` and the Evidence blocks aren't filled yet.
+- The audit used for `docket verify` is a scratch copy of the test fixture with the pytest command, as 010–012 did (this repo has no PROJECT_AUDIT.md).
 - The digest's line budget: the tail (up to 10 lines) and two header lines come first, and matching lines fill the rest, so the total never exceeds `--digest-lines`.
 - The new attach step is Step 6, at the end of `setup/attach.md`.
 - Implemented on branch `cheap-verify`.
+- Review (independent, 2026-10-18): PASS, no blocking findings. Re-ran pytest: 49 passed; the diff matches Files touched. Non-blocking, left for a later Ticket:
+  1. AC-2 says "byte-for-byte". The test checks only `latest.json`'s keys; the read-only code is what makes the claim true.
+  2. `test_digest_is_capped` doesn't check line numbers or structure; the other digest test does.
+  3. No test covers the `pre-review` digest path (`pre_review.py`).
+  4. When matches exceed the budget, the header gives the total count without "showing N of M".
+  5. Substring matching can flag passing tests whose names contain "failed" or "FAIL" (by design).
 
