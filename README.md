@@ -213,3 +213,7 @@ Docket is a template kit, not an application. `core/` is load-bearing for
 every attached project. Changes follow [`RULES.md`](core/RULES.md) and the
 freeze in [`LINE_MEETING.md`](core/LINE_MEETING.md) — grounded in real
 incidents, not speculative Stage 4.
+
+## License
+
+[MIT](LICENSE)
