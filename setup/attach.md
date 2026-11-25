@@ -134,3 +134,23 @@ project's `.gitignore`. Self-review must end with
 `docket pre-review <ticket> --audit PROJECT_AUDIT.md` (exit 0) before
 Review; fresh Reviewers use `docket review-packet` — see
 [`../tooling/README.md`](../tooling/README.md).
+
+## Step 6 — Turn off plugins the project doesn't use
+
+Every session and every subagent (the Reviewer included) loads each
+enabled plugin's tool and skill lists before it does anything, and that
+can be tens of thousands of tokens. In the project, create
+`.claude/settings.local.json`:
+
+```json
+{
+  "enabledPlugins": {
+    "<plugin>@<marketplace>": false
+  }
+}
+```
+
+List the plugins with `/plugin`. Keep the file out of git (add
+`.claude/settings.local.json` to `.git/info/exclude` or `.gitignore`).
+Turn a plugin back on when a task needs it.
+

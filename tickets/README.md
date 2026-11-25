@@ -42,6 +42,7 @@ without a Ticket. These Tickets came after it.
 | 010 | [Stop tracking `.DS_Store` files](010-untrack-ds-store.md) | `.gitignore`, `adapters/.DS_Store`, `core/.DS_Store` | — |
 | 011 | [Bring this index up to date](011-refresh-tickets-index.md) | `tickets/README.md` | — |
 | 012 | [Document `tests:` Evidence in the self-review recipe](012-document-tests-evidence-in-recipe.md) | `core/recipes/recipe-self-review.md` | 009 |
+| 013 | [Keep test output and session baseline out of context](013-cheap-verify-and-baseline.md) | `tooling/`, `core/WORKFLOW.md`, `core/recipes/recipe-self-review.md`, `core/CHANGELOG.md`, `setup/attach.md` | 009 |
 
 ## Deferred — still open
 

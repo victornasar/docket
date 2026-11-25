@@ -19,6 +19,25 @@ Newest first.
 
 ---
 
+## 2026-10-17 — Keep test output and start-up cost out of context (Ticket 013)
+
+**Triggering project:** guibrief (Tickets 123–127).
+
+**What happened:** the owner asked why launching a test or a Reviewer
+started at about 50k tokens. Two causes. Every session and subagent loads
+every enabled plugin's tool list first; guibrief's Vercel plugin alone
+lists about 300 tools. And a failed `docket verify` said only `exit: 1`,
+so the agent had to open the full log (thousands of Playwright lines) to
+see what failed.
+
+**Fix:** `verify` and `pre-review` print a failure digest of at most 40
+lines on failure. WORKFLOW.md gains "Keeping verification cheap": run
+through docket, read the digest, not the log; the human may run
+pre-review themselves; one Reviewer per batch. `setup/attach.md` gains
+Step 6, turning off unused plugins per project.
+
+---
+
 ## 2026-10-15 — Session boundaries and cheaper Evidence (Ticket 009)
 
 **Triggering project:** guibrief (Program v3, Tickets 093–101, one session).

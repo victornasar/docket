@@ -75,6 +75,11 @@ report around it.
    run `docket review-packet <ticket>` and give them that output plus the
    Ticket path — they must not need chat history.
 
+On a failed run, read the failure digest that `verify` / `pre-review`
+prints, and then only the log lines it names. Don't open the whole log,
+and don't re-run the raw test command to see the output (WORKFLOW.md,
+"Keeping verification cheap").
+
 ## Evidence schema (Project verify)
 
 ```text

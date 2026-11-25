@@ -112,6 +112,13 @@ cleaned or gitignored. That is project hygiene, not a Docket special case.
 
 `docket verify` writes `.docket/verify/*.log` and `*.json`, plus `latest.json`.
 
+On a non-zero exit, `verify` and `pre-review` also print a **failure digest**
+of at most 40 lines: log lines matching a failure marker (`✘`, `✖`, `FAIL`,
+`Error:`, `error TS`, `failed`, `ERR!`), each prefixed with its log line
+number, then the log's last 10 lines. `--digest-lines N` changes the cap;
+`0` turns it off. The digest is output only; the log and attestation are
+unchanged.
+
 Fingerprint = HEAD + dirty worktree, excluding `.docket/` and the Ticket file.
 Implementation edits invalidate attestation → re-verify.
 

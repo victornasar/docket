@@ -7,7 +7,7 @@ from pathlib import Path
 from .check_evidence import check_evidence
 from .check_scope import check_scope
 from .lint_ticket import lint_ticket
-from .verify_cmd import format_evidence_block, verify
+from .verify_cmd import DIGEST_LINES, failure_digest, format_evidence_block, verify
 
 
 @dataclass
@@ -24,6 +24,7 @@ def pre_review(
     audit_path: Path | None,
     skip_verify: bool = False,
     baseline: str | None = None,
+    digest_lines: int = DIGEST_LINES,
 ) -> PreReviewResult:
     """Run mechanical gates in the only valid order before Review.
 
@@ -73,6 +74,8 @@ def pre_review(
         messages.append("Copy into Ticket Evidence → Project verify (if not already):")
         messages.append(format_evidence_block(att, attest_rel))
         if att.exit != 0:
+            messages.append("")
+            messages.extend(failure_digest(repo / att.log, digest_lines))
             messages.append("")
             messages.append(
                 "BLOCKED: verify exited non-zero. Fix the underlying failure, "

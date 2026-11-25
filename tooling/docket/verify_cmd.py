@@ -152,6 +152,35 @@ def verify(
     )
 
 
+DIGEST_LINES = 40
+DIGEST_TAIL = 10
+_FAILURE_MARKERS = ("✘", "✖", "FAIL", "Error:", "error TS", "failed", "ERR!")
+
+
+def failure_digest(log_path: Path, limit: int = DIGEST_LINES) -> list[str]:
+    """A short summary of a failed run, so the log needn't be read whole.
+
+    The lines matching a failure marker, each with its line number in the
+    log, then the log's last lines; at most `limit` lines in all. Empty
+    when `limit` is 0. Read-only: the log and attestation are unchanged.
+    """
+    if limit <= 0:
+        return []
+    lines = log_path.read_text(encoding="utf-8", errors="replace").splitlines()
+    tail_start = max(0, len(lines) - DIGEST_TAIL)
+    budget = max(0, limit - 2 - min(DIGEST_TAIL, len(lines)))
+    hits = [
+        f"{n}: {line.rstrip()}"
+        for n, line in enumerate(lines[:tail_start], start=1)
+        if any(marker in line for marker in _FAILURE_MARKERS)
+    ]
+    out = [f"--- failure digest (log line: text), {len(hits)} matching line(s) ---"]
+    out.extend(hits[:budget])
+    out.append(f"--- last {len(lines) - tail_start} line(s) ---")
+    out.extend(f"{n}: {line.rstrip()}" for n, line in enumerate(lines[tail_start:], start=tail_start + 1))
+    return out[:limit]
+
+
 def format_evidence_block(att: Attestation, attestation_path: str) -> str:
     return "\n".join(
         [
