@@ -1,218 +1,100 @@
 # Docket
 
-Docket makes one unit of agent work **trustworthy**.
+Docket is a lightweight process for checking an AI coding agent's work before anyone calls it done.
+
+AI agents can make changes quickly and still fail quietly. They report "tests passed" when they didn't run, change files nobody asked them to touch, review their own work and see what they meant instead of what they wrote, or call something done because they say so. Docket doesn't try to make the agent more trustworthy. It makes your process **depend less on trusting the agent**.
+
+It does this with five plain rules:
+
+1. **Agree on the work first.** Every change starts as a short written Ticket you approve: the problem, the approach, the files it will touch, how to check it, and how to undo it. No code before approval.
+2. **Prove it, don't describe it.** The agent records evidence for each acceptance criterion: the command it ran and what happened, not a summary of what it believes.
+3. **Let tools check the evidence.** A small command-line tool runs your project's real test command, records the result tied to the exact state of the code, and confirms the agent stayed within the files it was approved to change.
+4. **Have someone else review.** A separate reviewer, with no memory of writing the code, checks the evidence against the Ticket.
+5. **Done means proven.** Work is done when the evidence holds up and the review passes, not when the agent says it's finished. Merging and deploying stay your decision.
+
+Docket is mostly Markdown (rules, a workflow, role descriptions, templates) plus a small Python tool. You add it to an existing project; it isn't an application.
+
+## How a change moves through Docket
 
 ```
-Skills  = capability   how to perform a type of work
-Docket  = trust        one Ticket specified, proven, independently reviewed
-pstack  = scale        many trustworthy units (outside this repo — not built here)
+TICKET  →  IMPLEMENT  →  SELF-REVIEW  →  PRE-REVIEW  →  REVIEW  →  DONE
+you approve   agent builds   agent records   tool checks     separate      evidence
+the plan      within scope   evidence        the evidence    reviewer      holds up
 ```
 
-**Skills make agents capable. Docket makes their work trustworthy. pstack
-makes trustworthy work scalable.**
-
-Docket does not try to make the agent more trustworthy. It makes the
-**system less dependent on trusting the agent**: specify the work, bind
-proof to the worktree, and require independent review before Done.
-
----
-
-## What problem it solves
-
-AI agents can implement changes quickly and still fail quietly: forged
-“tests passed,” scope creep, self-review that remembers writing the code,
-and Done that means “the agent said so.”
-
-Docket is a vendored planning-and-review kit for that failure mode:
-
-- a human-approved **Ticket** before code
-- **Evidence** recorded at Self-review (not narrative claims)
-- mechanical **pre-review** gates (verify → scope → evidence)
-- independent **Review** that audits Evidence + diff
-- **Done** as an evidence-backed state — not an agent declaration
-
-It is mostly Markdown and role definitions, plus a small Python CLI
-(`bin/docket` / `tooling/`). Attach it to a project (symlink or submodule
-today); generate a thin adapter (`CLAUDE.md` or Cursor rules) that points
-back at it.
-
-**On “works anywhere”:** `core/` is plain Markdown. In practice the Claude
-Code adapter is the reference. Cursor exists but is experimental — it
-approximates independent Review with a fresh chat, not a true subagent.
-
----
-
-## Skills vs Docket vs pstack
-
-| Layer | Answers | Lives |
-|---|---|---|
-| **Skills** | “How do I perform this kind of work?” | Thin, optional; host skill paths; point into Docket recipes |
-| **Docket** | “How do we know this work stayed inside the agreed contract?” | This repo — Ticket, Evidence, gates, Review, Done |
-| **pstack** | “How do many trustworthy units scale?” | Outside this repo — not built here |
-
-Do not blur these boundaries. Docket is the trust layer. Skills are
-capability / procedural knowledge. pstack is outer-loop orchestration.
-
-Skills should stay thin. Expand them only when real Tickets show a
-**recurring** procedural need — not by inventing a Skills framework up
-front. Today Docket ships one: [`skills/verify-with-evidence`](skills/verify-with-evidence/SKILL.md).
-
----
-
-## Current status
-
-**Stage 1–3: implemented and stabilized** (experimental baseline).
-
-Milestone commit: `d683b73` —
-*Docket Stage 1-3: evidence, verification, and review gates*.
-
-| Stage | What landed |
-|---|---|
-| **1 — Evidence** | Ticket Evidence contract; Done as an evidence state; Project Audit Verification; Reviewer audits evidence (does not invent it) |
-| **2 — Gates** | `verify`, `check-scope`, `check-evidence`; attestation; worktree fingerprint / stale detection |
-| **3 — Habit** | Fail-closed `pre-review` (ordered handoff); `review-packet` for fresh-context Review discovery |
-
-Kit tests: **23** pytest cases. Isolated CLI smoke: **32/32** (stabilization).
-Stage 4 has **not** been implemented.
-
-### Current phase: real-project validation
-
-The next step is **not** more Docket infrastructure.
-
-Use Docket on a real (preferably non-production) codebase and run complete
-Tickets through the workflow. Empirically learn:
-
-- where agents struggle
-- what information they repeatedly need
-- whether Evidence is useful proof or bureaucracy
-- whether Review catches meaningful problems
-- where friction appears
-- what recurring procedures deserve a Skill
-
-Those questions are open until real use answers them.
-
----
-
-## How it works
-
-```
-TICKET → IMPLEMENT → SELF-REVIEW → PRE-REVIEW → REVIEW → DONE
-```
-
-Self-review fills Evidence; **PRE-REVIEW** is the mechanical gate before
-handoff (`docket pre-review`):
-
-1. **Canonical project verification** (`verify`) — Audit command runs; exit, log, HEAD, fingerprint recorded
-2. **Scope** (`check-scope`) — changes since Ticket **Baseline** ⊆ Files Touched
-3. **Evidence** (`check-evidence`) — structure valid; Markdown matches attestation; not stale
-
-Non-zero from any step **blocks** Review. Green gates establish
-execution / scope / evidence integrity. They do **not** mean the change
-is semantically correct — that remains independent Reviewer judgment.
-
-| Stage | Owner | What happens | Exit gate |
+| Step | Who | What happens | Moves on when |
 |---|---|---|---|
-| **Ticket** | Planner | Problem, Approach, Files Touched, ACs, Rollback; Evidence blank; Project Audit if needed; **Baseline:** at start | Human approval. No code before this. |
-| **Implement** | Implementer | Execute the Ticket within Files Touched | Approach done; no silent scope creep |
-| **Self-review** | Implementer | Fill Evidence for every AC | Ready to run pre-review |
-| **Pre-review** | Implementer (CLI) | `docket pre-review` → verify → check-scope → check-evidence | Exit 0 on the **final** worktree |
-| **Review** | Reviewer | Independent audit of Evidence + diff (`review-packet` for discovery). Missing/inadequate Evidence → send-back | Pass / Send-back / Escalate |
-| **Done** | — | Evidence-backed Done | See below |
+| Ticket | Planner (agent) and you | Problem, approach, files touched, acceptance criteria, rollback plan | You approve it |
+| Implement | Implementer (agent) | Builds exactly what the Ticket describes, touching only its listed files | The approach is done, with no unapproved extra changes |
+| Self-review | Implementer | Records evidence for every acceptance criterion | Evidence is complete |
+| Pre-review | The `docket` tool | Runs three checks in order: the project's test command, the scope check, the evidence check | All three pass on the final code |
+| Review | Reviewer (separate, read-only) | Checks the evidence and the diff against the Ticket | Pass, send back with specific feedback, or escalate to you |
+| Done | | Evidence holds up and the review passed | |
 
-**Roles.** Planner writes Tickets (no self-approval). Implementer is scoped
-to Files Touched. Reviewer is read-only and, where the host allows,
-genuinely separate context (Claude Code subagent; Cursor: fresh chat
-approximation).
+If the reviewer sends work back twice, the third time goes to you instead: two failed attempts usually mean the Ticket itself needs rethinking.
 
-**Send-back:** itemized feedback → Implement → re-verify → pre-review →
-Review. After two send-backs, escalate to the human.
+Some actions always need your explicit yes, however small the change: deleting things, touching production, changing dependencies or CI, and anything that can't be undone. These are listed in [`core/RULES.md`](core/RULES.md).
 
-**Rules.** [`core/RULES.md`](core/RULES.md) — CONFIRM / BLOCK / ESCALATE on
-top of the host’s baseline safety.
+## The `docket` tool
 
-Tooling details: [`tooling/README.md`](tooling/README.md).
-
----
-
-## What Done means
-
-Done is an **evidence-backed state**, not “the agent says it works,” and
-not merge/deploy.
-
-At minimum Done requires:
-
-- Evidence structurally complete for every AC
-- Canonical project verification recorded as passing (`docket verify`)
-- Verification / Evidence bound to the current relevant worktree (not stale)
-- Scope accounted for (`check-scope`)
-- Independent Reviewer **Pass** (adequacy of evidence vs ACs)
-- No unresolved CONFIRM / ESCALATE
-
-Deployment and production actions remain separate human CONFIRM after Done.
-
-### What Docket does **not** prove
-
-Mechanical green does not establish:
-
-- that an AC is well-written
-- that a test actually proves the AC
-- that a suite is non-vacuous
-- that manual evidence is truthful
-- that the Reviewer exercised good judgment
-- that the project architecture is correct
-- that the human approved the right Ticket
-- that production deployment is safe
-
-Those remain Reviewer, human, and project judgment — by design.
-
----
-
-## What you can do with it
-
-- **Attach.** [`setup/attach.md`](setup/attach.md) (or `attach-docket`):
-  symlink/submodule, Project Audit, adapter files, confirm Ticket-before-code.
-- **Run one Ticket.** Approve → Implement → Self-review → `pre-review` →
-  independent Review → Done → you merge.
-- **Parallel (experimental).** [`advanced/PARALLEL_LINE.md`](advanced/PARALLEL_LINE.md)
-  — unproven on a single-operator project.
-- **Evolve from incidents.** Real gaps → human-approved `core/` change →
-  [`CHANGELOG.md`](core/CHANGELOG.md). Spine is frozen; see
-  [`LINE_MEETING.md`](core/LINE_MEETING.md).
-
-**Intentionally later (not next):** Stage 4 machinery, attach/sync CLIs,
-kit CI, pstack fleets, autonomous merge, semantic “test quality” oracles.
-
----
-
-## Repo map
-
-```
-docket/
-  core/                 Rules, workflow, roles, recipes, templates, changelog
-  skills/               Thin host skills (verify-with-evidence today)
-  tooling/docket/       CLI: verify, check-scope, check-evidence,
-                        pre-review, review-packet
-  bin/docket            Wrapper → python3 -m docket
-  advanced/             Experimental parallel Line (unproven solo)
-  adapters/             claude-code (reference), cursor (experimental)
-  setup/attach.md       How to wire Docket into a project
+```bash
+docket pre-review tickets/001-example.md --audit PROJECT_AUDIT.md   # the normal handoff check
+docket review-packet tickets/001-example.md                         # what a fresh reviewer needs
+docket verify --audit PROJECT_AUDIT.md --ticket tickets/001-example.md   # individual checks,
+docket check-scope tickets/001-example.md                             # in this order
+docket check-evidence tickets/001-example.md
+docket lint-ticket tickets/001-example.md                           # Ticket structure only
+docket done tickets/001-example.md                                  # confirm a finished Ticket
+docket resume                                                       # short brief to start a new session
 ```
 
-## Reading order
+- **`verify`** runs your project's test command (named once, in a Project Audit file) and records the exit code, the commit, and a fingerprint of the working tree.
+- **`check-scope`** fails if any file changed that isn't listed in the Ticket.
+- **`check-evidence`** fails if evidence is missing, doesn't match the recorded run, or is out of date because the code changed afterwards.
+- On a failed run, `verify` and `pre-review` print a short failure digest: the error lines and the end of the log.
 
-1. This README
-2. [`core/RULES.md`](core/RULES.md)
-3. [`core/WORKFLOW.md`](core/WORKFLOW.md)
-4. [`core/roles/`](core/roles/)
-5. [`tooling/README.md`](tooling/README.md)
-6. [`adapters/claude-code/`](adapters/claude-code/) (or Cursor, experimental)
+Passing checks prove the tests ran, the scope held, and the evidence is current. They don't prove the change is correct. That stays the reviewer's job. Full details: [`tooling/README.md`](tooling/README.md).
 
-## Scope of this repo
+## Getting started
 
-Docket is a template kit, not an application. `core/` is load-bearing for
-every attached project. Changes follow [`RULES.md`](core/RULES.md) and the
-freeze in [`LINE_MEETING.md`](core/LINE_MEETING.md) — grounded in real
-incidents, not speculative Stage 4.
+1. **Add Docket to your project.** Follow [`setup/attach.md`](setup/attach.md): link Docket into the project, write a short Project Audit (your stack, conventions, and test command), and add the instruction file for your coding tool.
+2. **Run one Ticket end to end.** Ask for a change, approve the Ticket, let the agent build and self-review, run `docket pre-review`, have a separate reviewer check it, then merge it yourself.
+3. **Start a fresh session for the next Ticket.** `docket resume` prints a short brief so the new session doesn't need the old conversation.
+
+Supported tools: **Claude Code** (the reference setup, with a true separate reviewer) and **Cursor** (experimental: it approximates the separate reviewer with a fresh chat).
+
+The tool needs Python 3.10 or newer and no other dependencies. Run it as `bin/docket`, or as `python3 -m docket` with `tooling/` on `PYTHONPATH`.
+
+## What "done" does and doesn't mean
+
+Done requires evidence for every acceptance criterion, a passing test run tied to the current code, scope accounted for, a passing independent review, and no open safety questions.
+
+Done does **not** prove that the acceptance criteria were the right ones, that a test really exercises what it claims, that manual evidence is truthful, or that deploying is safe. Those stay with the reviewer and with you, by design.
+
+## Status
+
+The core process and the tool are implemented and stable for single-ticket work: the evidence contract, the three checks, the pre-review handoff, and reviewer support. Running several Tickets in parallel is described in [`advanced/PARALLEL_LINE.md`](advanced/PARALLEL_LINE.md) but is experimental and unproven.
+
+The current focus is real-project use, not more machinery: learning where agents struggle, whether the evidence is useful or just paperwork, and whether review catches real problems.
+
+## What's in this repository
+
+```
+core/            rules, workflow, roles, recipes, templates, changelog
+tooling/         the docket command-line tool and its tests
+bin/docket       wrapper that runs the tool
+adapters/        instruction files for Claude Code (reference) and Cursor (experimental)
+setup/attach.md  how to add Docket to a project
+skills/          a small helper skill for the self-review step
+advanced/        experimental parallel workflow
+tickets/         Docket's own Tickets: it is built with its own process
+```
+
+Suggested reading order: this README, [`core/RULES.md`](core/RULES.md), [`core/WORKFLOW.md`](core/WORKFLOW.md), [`core/roles/`](core/roles/), [`tooling/README.md`](tooling/README.md).
+
+## Changing Docket
+
+`core/` is shared by every project that uses Docket, so changes need a real incident behind them, follow [`core/RULES.md`](core/RULES.md), and are recorded in [`core/CHANGELOG.md`](core/CHANGELOG.md).
 
 ## License
 
