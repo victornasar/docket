@@ -58,7 +58,7 @@ Passing checks prove the tests ran, the scope held, and the evidence is current.
 ## Getting started
 
 1. **Add Docket to your project.** Follow [`setup/attach.md`](setup/attach.md): link Docket into the project, write a short Project Audit (your stack, conventions, and test command), and add the instruction file for your coding tool.
-2. **Run one Ticket end to end.** Ask for a change, approve the Ticket, let the agent build and self-review, run `docket pre-review`, have a separate reviewer check it, then merge it yourself.
+2. **Run one Ticket end to end.** [`GUIDE.md`](GUIDE.md) walks through two examples. Ask for a change, approve the Ticket, let the agent build and self-review, run `docket pre-review`, have a separate reviewer check it, then merge it yourself.
 3. **Start a fresh session for the next Ticket.** `docket resume` prints a short brief so the new session doesn't need the old conversation.
 
 Supported tools: **Claude Code** (the reference setup, with a true separate reviewer) and **Cursor** (experimental: it approximates the separate reviewer with a fresh chat).
@@ -80,6 +80,7 @@ The current focus is real-project use, not more machinery: learning where agents
 ## What's in this repository
 
 ```
+GUIDE.md         walkthrough: two sample issues from request to Done
 core/            rules, workflow, roles, recipes, templates, changelog
 tooling/         the docket command-line tool and its tests
 bin/docket       wrapper that runs the tool
@@ -90,7 +91,7 @@ advanced/        experimental parallel workflow
 tickets/         Docket's own Tickets: it is built with its own process
 ```
 
-Suggested reading order: this README, [`core/RULES.md`](core/RULES.md), [`core/WORKFLOW.md`](core/WORKFLOW.md), [`core/roles/`](core/roles/), [`tooling/README.md`](tooling/README.md).
+Suggested reading order: this README, [`GUIDE.md`](GUIDE.md) (a walkthrough of two sample issues), [`core/RULES.md`](core/RULES.md), [`core/WORKFLOW.md`](core/WORKFLOW.md), [`core/roles/`](core/roles/), [`tooling/README.md`](tooling/README.md).
 
 ## Changing Docket
 
