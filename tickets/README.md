@@ -43,6 +43,7 @@ without a Ticket. These Tickets came after it.
 | 011 | [Bring this index up to date](011-refresh-tickets-index.md) | `tickets/README.md` | — |
 | 012 | [Document `tests:` Evidence in the self-review recipe](012-document-tests-evidence-in-recipe.md) | `core/recipes/recipe-self-review.md` | 009 |
 | 013 | [Keep test output and session baseline out of context](013-cheap-verify-and-baseline.md) | `tooling/`, `core/WORKFLOW.md`, `core/recipes/recipe-self-review.md`, `core/CHANGELOG.md`, `setup/attach.md` | 009 |
+| 014 | [Remove the capability recipes from `core/`](014-remove-capability-recipes.md) | `core/recipes/` (6 deleted), `core/WORKFLOW.md`, `core/roles/*.md`, `core/templates/ticket.template.md`, `core/LINE_MEETING.md`, `core/CHANGELOG.md`, `skills/README.md` | — |
 
 ## Deferred — still open
 

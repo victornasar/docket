@@ -19,6 +19,37 @@ Newest first.
 
 ---
 
+## 2026-11-25 — Remove the capability recipes (Ticket 014)
+
+**Triggering project:** none. A subtraction, logged as `LINE_MEETING.md`
+requires for removals.
+
+**What happened:** the owner reports the six capability recipes (code
+review, diagnosis, domain modeling, program design, TDD, ticket writing)
+are no longer used. They still loaded into every attached project through
+links in the roles, the workflow, and the Ticket template, alongside
+whatever capability layer the project uses, as a second source of coding
+guidance that could drift. Docket's job is trust, not capability.
+
+**Fix:** the six recipes are deleted. `recipe-self-review.md` (the
+Evidence contract) and `recipe-safe-migration.md` (referenced by RULES
+§4) stay, unchanged. Each link to a deleted recipe is removed and the
+rule it supported is stated in place: confirmed root cause and repro
+before a bug Ticket (planner), repro becomes a regression test before the
+fix (implementer), a separate Standards pass that sends back alone only
+when severe (reviewer). `LINE_MEETING.md` no longer allows adding
+capability recipes.
+
+**Files changed:** `core/recipes/recipe-code-review.md`,
+`core/recipes/recipe-diagnosis.md`, `core/recipes/recipe-domain-modeling.md`,
+`core/recipes/recipe-program-design.md`, `core/recipes/recipe-tdd.md`,
+`core/recipes/recipe-ticket-writing.md` (all deleted), `core/WORKFLOW.md`,
+`core/roles/planner.md`, `core/roles/implementer.md`,
+`core/roles/reviewer.md`, `core/templates/ticket.template.md`,
+`core/LINE_MEETING.md`, `skills/README.md`, this changelog.
+
+---
+
 ## 2026-10-17 — Keep test output and start-up cost out of context (Ticket 013)
 
 **Triggering project:** guibrief (Tickets 123–127).

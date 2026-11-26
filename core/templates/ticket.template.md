@@ -2,7 +2,7 @@
 
 <!--
 Filled out by the Planner before any code is written. See
-core/recipes/recipe-ticket-writing.md for guidance and a worked example.
+core/roles/planner.md for what a ready Ticket contains.
 Do not remove sections; write "N/A" with a one-line reason if genuinely
 not applicable.
 -->
@@ -19,16 +19,15 @@ not applicable.
 <What's actually wrong or missing — not a restatement of the request. One
 or two sentences a reader unfamiliar with the request would understand.
 For a bug or performance Ticket, this states the confirmed root cause and
-names the repro command from core/recipes/recipe-diagnosis.md — not just
-the symptom. If the cause is still unknown, the Ticket isn't ready.>
+names the command that reproduces it — not just the symptom. If the cause is still unknown, the Ticket isn't ready.>
 
 ## Approach
 
 <Numbered steps, concrete enough that an Implementer can follow them
 without re-deriving the design. Name specific functions/modules/endpoints
 where known. If this introduces a new type, a new data-transformation
-boundary, or a call-flow change, include the field/type mapping or
-call-stack sketch from core/recipes/recipe-program-design.md here — not
+boundary, or a call-flow change, include a field/type mapping or
+call-stack sketch here — not
 every Ticket needs this, only ones with a new shape to get wrong.>
 
 1.

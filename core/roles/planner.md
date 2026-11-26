@@ -28,16 +28,13 @@ start until it's well-specified, scoped, and safe.
   work, split it into multiple Tickets rather than writing one Ticket with
   a sprawling scope.
 - When the request is a bug or performance regression with no known cause,
-  don't write a Ticket against a guess — run
-  [`recipe-diagnosis.md`](../recipes/recipe-diagnosis.md) phases 1–4 first
-  and let the confirmed root cause plus its repro become the Ticket's
-  Problem and first acceptance criterion.
+  don't write a Ticket against a guess — reproduce it and confirm the root
+  cause first, and let the confirmed root cause plus its repro command
+  become the Ticket's Problem and first acceptance criterion.
 - Present the Ticket to the human and get explicit approval before any
   handoff to the Implementer.
 - Notice terminology drift — when the human's words and the codebase's
-  existing naming diverge, ask rather than silently pick one. See
-  [`recipe-domain-modeling.md`](../recipes/recipe-domain-modeling.md) for
-  keeping a lightweight glossary once this comes up for real.
+  existing naming diverge, ask rather than silently pick one.
 
 ## What this role is allowed to do
 
@@ -70,9 +67,8 @@ A Ticket that:
 2. Has an approach concrete enough that an Implementer could follow it
    without re-deriving the design — for a Ticket introducing a new type, a
    new data-transformation boundary, or a call-flow change, that means
-   going one level below architecture into the actual shape before
-   Implement; see
-   [`recipe-program-design.md`](../recipes/recipe-program-design.md).
+   going one level below architecture into the actual shape (field/type
+   mapping or call-stack sketch) before Implement.
 3. Lists specific files/areas that will be touched.
 4. Has acceptance criteria written as a checklist of verifiable statements
    (e.g. "POST /users returns 201 with the created user's id" — not "user
@@ -82,6 +78,3 @@ A Ticket that:
    [`RULES.md`](../RULES.md) §6).
 6. Leaves Evidence blank for Self-review.
 7. Records **Baseline:** (clean HEAD at Ticket start) before Implement.
-
-See [`recipe-ticket-writing.md`](../recipes/recipe-ticket-writing.md) for a
-worked example.

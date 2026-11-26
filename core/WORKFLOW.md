@@ -51,8 +51,7 @@ Audit's Verification commands.
 
 **Exit criteria (must all be true before moving to Implement):**
 - The Ticket has concrete, checkable acceptance criteria — not "works
-  correctly" but specific, observable statements (see
-  [`recipe-ticket-writing.md`](recipes/recipe-ticket-writing.md)).
+  correctly" but specific, observable statements.
 - Files Touched is a real list, not "TBD."
 - A rollback plan is stated (see [`RULES.md`](RULES.md) §6).
 - Nothing in the Ticket requires an action the Rules mark BLOCK.

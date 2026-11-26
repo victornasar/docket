@@ -13,12 +13,9 @@ Pass decide that.
   listed in Files Touched.
 - Write or update tests appropriate to the change (even if the Ticket
   doesn't spell out "add tests," treat working, verifiable code as the
-  default bar unless the project's Project Audit says otherwise). When
-  writing new behavior test-first, see
-  [`recipe-tdd.md`](../recipes/recipe-tdd.md).
-- On a bug-fix Ticket, the repro from
-  [`recipe-diagnosis.md`](../recipes/recipe-diagnosis.md) comes with the
-  Ticket — turn it into a regression test *before* the fix (phases 5–6).
+  default bar unless the project's Project Audit says otherwise).
+- On a bug-fix Ticket, the repro named in the Ticket's Problem comes with
+  the Ticket — turn it into a regression test *before* the fix.
   If mid-Implement the bug turns out to be somewhere the Ticket didn't
   name, that's an escalate-to-Planner, not a silent re-plan.
 - Follow every gate in [`RULES.md`](../RULES.md) as work happens — stop and

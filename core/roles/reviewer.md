@@ -82,10 +82,10 @@ For every Ticket, in order:
 7. **Standards, as a separate pass from the above.** Steps 1–6 are Spec —
    does it match the Ticket with proof. Independent of that, is the code
    itself well-crafted by the project's own conventions (and a generic
-   smell baseline where conventions don't say)? See
-   [`recipe-code-review.md`](../recipes/recipe-code-review.md) — report
-   this separately from Spec, and don't let a Standards finding alone
-   trigger a send-back unless it's severe (see that recipe's guidance).
+   smell baseline where conventions don't say)? Report this separately
+   from Spec, and don't let a Standards finding alone trigger a send-back
+   unless it's severe. A minor one is a candidate for its own future
+   Ticket: note it, don't fix it.
 
 ## Decision tree
 

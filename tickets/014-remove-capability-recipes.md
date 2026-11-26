@@ -1,10 +1,10 @@
 # Ticket: Remove the capability recipes from `core/`
 
-**Status:** approved
+**Status:** done
 **Owner (Implementer):** Claude
 **Retry count:** 0
 **Related project audit:** N/A — this repo
-**Baseline:** (set when the Ticket starts)
+**Baseline:** dd982aec55cd2a599487b196295262f8c6cbb7f4
 **Worktree:**
 
 ## Problem
@@ -80,36 +80,72 @@ Revert the commit. The deleted files come back with it; nothing outside the repo
 ### Project verify
 
 ```text
-command:
-exit:
-log:
-ran_at:
-git_head:
-tree_fingerprint:
-attestation:
+command: tooling/.venv/bin/pytest -v -p no:cacheprovider tooling
+exit: 0
+log: .docket/verify/014-remove-capability-recipes-20261126T000236Z.log
+ran_at: 2026-11-26T00:02:36Z
+git_head: dd982aec55cd2a599487b196295262f8c6cbb7f4
+tree_fingerprint: 8d25db0c5bfb5d4d6dab83815a9b64065e4c48054c6f95116e6adcd0ac2ab483
+attestation: .docket/verify/014-remove-capability-recipes-20261126T000236Z.json
 ```
 
 ### Acceptance criteria
 
 ```text
 id: AC-1
-criterion:
-method:
-how:
-result:
-evidence:
+criterion: The six capability recipe files no longer exist; recipe-self-review.md and recipe-safe-migration.md exist unchanged
+method: command
+how: ls core/recipes; git diff --stat dd982aec -- core/recipes/recipe-self-review.md core/recipes/recipe-safe-migration.md
+result: pass
+evidence: ls prints only recipe-safe-migration.md and recipe-self-review.md; git diff --stat prints nothing for the two kept files
+notes:
+
+id: AC-2
+criterion: No file outside tickets/ and core/CHANGELOG.md mentions a deleted recipe
+method: command
+how: grep -rnE "recipe-(code-review|diagnosis|domain-modeling|program-design|tdd|ticket-writing)" --exclude-dir=tickets --exclude-dir=.git . | grep -v core/CHANGELOG.md
+result: pass
+evidence: no output (grep exit 1)
+notes:
+
+id: AC-3
+criterion: Planner requires confirmed root cause and repro before a bug Ticket; Implementer turns that repro into a regression test before the fix; Reviewer keeps a separate Standards pass that sends back alone only when severe
+method: manual
+how: git diff dd982aec -- core/roles
+result: pass
+evidence: planner.md "reproduce it and confirm the root cause first, and let the confirmed root cause plus its repro command become the Ticket's Problem"; implementer.md "the repro named in the Ticket's Problem ... turn it into a regression test *before* the fix"; reviewer.md "Report this separately from Spec, and don't let a Standards finding alone trigger a send-back unless it's severe"
+notes:
+
+id: AC-4
+criterion: LINE_MEETING.md no longer allows adding capability recipes, and CHANGELOG.md has an entry for this removal naming the removed and kept files
+method: manual
+how: git diff dd982aec -- core/LINE_MEETING.md; read core/CHANGELOG.md entry "2026-11-25 — Remove the capability recipes (Ticket 014)"
+result: pass
+evidence: the "recipes/ is the one exception" sentence is replaced by "recipes/ holds only trust procedures ... frozen with the rest of the spine"; changelog entry lists the six deleted files and names the two kept
+notes:
+
+id: AC-5
+criterion: The tooling test suite passes unchanged
+method: command
+how: docket pre-review (Project verify above)
+result: pass
+evidence: exit 0; log has 49 PASSED lines and no FAILED or ERROR lines; no file under tooling/ changed
 notes:
 ```
 
 ### Scope review
 
 ```text
-diff_vs_files_touched:
-extras:
-justified:
-notes:
+diff_vs_files_touched: match
+extras: none
+justified: n/a
+notes: check-scope PASSED, 16 changed paths including tickets/ (auto-allowed)
 ```
 
 ## Notes for the Reviewer
+
+CONFIRM log: the owner explicitly approved deleting the six files immediately before `git rm`.
+
+Review (independent, Sonnet): Pass, no blocking findings. Standards notes: two wrapping inconsistencies in the template comments (cosmetic).
 
 External dependency to check after Done, not part of this Ticket: Hechent's `DOCKET-INTEGRATION.md` references `core/recipes/recipe-self-review.md` (kept, so unaffected) and lists the recipe overlap as open question 1 (resolved by this Ticket). Hechent updates its side separately.

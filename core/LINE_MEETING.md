@@ -3,9 +3,10 @@
 **The structural spine is frozen.** `RULES.md`, `WORKFLOW.md`, `roles/`,
 and `templates/` get no new stages, roles, rule sections, or structural
 files until at least three more projects — varied stack, scale, and
-ideally operator — have run the kit end to end. `recipes/` is the one
-exception: a new recipe may be added if it's adapted from an established
-external source or proven on real work, never invented speculatively.
+ideally operator — have run the kit end to end. `recipes/` holds only
+trust procedures (self-review, safe migration) and is frozen with the rest
+of the spine. Guidance on how to do the engineering itself (diagnosis,
+TDD, code review) does not belong in Docket.
 `CHANGELOG.md` records which projects count toward the three.
 
 ## Freeze exceptions

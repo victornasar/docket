@@ -1,7 +1,7 @@
 # Skills
 
 Thin host skills that teach **how to perform a type of work**. They point
-into Docket recipes and must not redefine Ticket, Review, Rules, or Done.
+into Docket's core documents and must not redefine Ticket, Review, Rules, or Done.
 
 ```
 Skills  = capability  (how to do the work)
