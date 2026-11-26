@@ -76,12 +76,14 @@ approval. The Planner declares the fast path in the Ticket's Rules check
 (see [`planner.md`](roles/planner.md)) and tells the human it is
 proceeding, so the human can stop it. Everything else is unchanged: the
 Ticket, Baseline, Evidence, `docket pre-review`, the independent Review,
-and the human's merge decision.
+and the human's merge decision. Wherever Docket says "approved Ticket",
+that includes a fast-path Ticket that met all four criteria.
 
 ## Stage 2 — Implement
 
 **Owner:** Implementer.
-**What happens:** Starting a Ticket = execute the approved Ticket. The
+**What happens:** Starting a Ticket = execute the approved Ticket (see
+Stage 1 for the fast path). The
 Implementer implements exactly what the Ticket describes, touching only
 the files it lists, within the tool/permission boundaries in
 [`implementer.md`](roles/implementer.md).

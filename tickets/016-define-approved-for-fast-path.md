@@ -1,10 +1,10 @@
 # Ticket: Say that "approved Ticket" includes an eligible fast-path Ticket
 
-**Status:** approved
+**Status:** done
 **Owner (Implementer):** Claude
 **Retry count:** 0
 **Related project audit:** N/A — this repo
-**Baseline:** (set when the Ticket starts)
+**Baseline:** 070bb9ca812d1fe1e3c3ff2dd58581ca2c56d523
 **Worktree:**
 
 ## Problem
@@ -49,36 +49,70 @@ Revert the commit.
 ### Project verify
 
 ```text
-command:
-exit:
-log:
-ran_at:
-git_head:
-tree_fingerprint:
-attestation:
+command: tooling/.venv/bin/pytest -v -p no:cacheprovider tooling
+exit: 0
+log: .docket/verify/016-define-approved-for-fast-path-20261126T030934Z.log
+ran_at: 2026-11-26T03:09:34Z
+git_head: 070bb9ca812d1fe1e3c3ff2dd58581ca2c56d523
+tree_fingerprint: f01fa7f7aabcfd6e356535bde92e99cd5ba07ddbc7b37c96efb5428191da6c1d
+attestation: .docket/verify/016-define-approved-for-fast-path-20261126T030934Z.json
 ```
 
 ### Acceptance criteria
 
 ```text
 id: AC-1
-criterion:
-method:
-how:
-result:
-evidence:
+criterion: WORKFLOW.md Stage 1 says "approved Ticket" includes an eligible fast-path Ticket, in one sentence after the fast-path paragraph
+method: manual
+how: git diff 070bb9c -- core/WORKFLOW.md
+result: pass
+evidence: fast-path paragraph now ends "Wherever Docket says \"approved Ticket\", that includes a fast-path Ticket that met all four criteria."
+notes:
+
+id: AC-2
+criterion: WORKFLOW.md Stage 2's opening line points to Stage 1 for the fast path
+method: manual
+how: git diff 070bb9c -- core/WORKFLOW.md
+result: pass
+evidence: "Starting a Ticket = execute the approved Ticket (see Stage 1 for the fast path)."
+notes:
+
+id: AC-3
+criterion: CHANGELOG.md has an entry referencing Ticket 015, and tickets/README.md lists Ticket 016
+method: manual
+how: read core/CHANGELOG.md top entry and tickets/README.md table
+result: pass
+evidence: entry "2026-11-25 — \"Approved Ticket\" includes the fast path (Ticket 016)" says it completes the Ticket 015 change; README row 016 depends on 015
+notes:
+
+id: AC-4
+criterion: No file other than the three in Files touched (and this Ticket) changed
+method: command
+how: docket pre-review (check-scope)
+result: pass
+evidence: "Scope check PASSED", 4 changed paths
+notes:
+
+id: AC-5
+criterion: The tooling suite passes unchanged
+method: command
+how: docket pre-review (Project verify above)
+result: pass
+evidence: exit 0, 49 PASSED, no FAILED or ERROR lines; no file under tooling/ changed
 notes:
 ```
 
 ### Scope review
 
 ```text
-diff_vs_files_touched:
-extras:
-justified:
-notes:
+diff_vs_files_touched: match
+extras: none
+justified: n/a
+notes: check-scope PASSED, 4 changed paths including this Ticket (tickets/ auto-allowed)
 ```
 
 ## Notes for the Reviewer
+
+Review (independent, Sonnet): Pass, no blocking findings. Standards note: a short line break in the Stage 2 edit (cosmetic).
 
 Follows Ticket 015's Review Standards notes 1 and 4. Note 2 (undeclared skips) is deliberately out of scope; see Approach.

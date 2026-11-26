@@ -19,6 +19,22 @@ Newest first.
 
 ---
 
+## 2026-11-25 — "Approved Ticket" includes the fast path (Ticket 016)
+
+**Triggering project:** none. Completes the wording of the Ticket 015
+change, under its `LINE_MEETING.md` exception.
+
+**What happened:** Ticket 015's independent Review noted that the roles,
+WORKFLOW Stage 2, and the Claude Code adapter still say "approved Ticket"
+as if approval were the only way in.
+
+**Fix:** WORKFLOW Stage 1 defines "approved Ticket" to include an eligible
+fast-path Ticket, and Stage 2 points to it. No rule changed.
+
+**Files changed:** `core/WORKFLOW.md`, this changelog.
+
+---
+
 ## 2026-11-25 — Fast path at Ticket approval (Ticket 015)
 
 **Triggering project:** none. Owner freeze exception, recorded in

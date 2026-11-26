@@ -45,6 +45,7 @@ without a Ticket. These Tickets came after it.
 | 013 | [Keep test output and session baseline out of context](013-cheap-verify-and-baseline.md) | `tooling/`, `core/WORKFLOW.md`, `core/recipes/recipe-self-review.md`, `core/CHANGELOG.md`, `setup/attach.md` | 009 |
 | 014 | [Remove the capability recipes from `core/`](014-remove-capability-recipes.md) | `core/recipes/` (6 deleted), `core/WORKFLOW.md`, `core/roles/*.md`, `core/templates/ticket.template.md`, `core/LINE_MEETING.md`, `core/CHANGELOG.md`, `skills/README.md` | — |
 | 015 | [Let no-runtime-change Tickets skip approval, per project](015-fast-path-approval.md) | `core/WORKFLOW.md`, `core/roles/planner.md`, `core/roles/reviewer.md`, `core/templates/*.md`, `core/LINE_MEETING.md`, `core/CHANGELOG.md`, adapter templates, `README.md`, `GUIDE.md` | — |
+| 016 | [Say that "approved Ticket" includes the fast path](016-define-approved-for-fast-path.md) | `core/WORKFLOW.md`, `core/CHANGELOG.md` | 015 |
 
 ## Deferred — still open
 
