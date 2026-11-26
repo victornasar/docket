@@ -110,3 +110,13 @@ production, any environment with real user data).>
 rules beyond the universal set — a stricter gate, an extra BLOCK — note
 them here. This document cannot remove or weaken anything in
 core/RULES.md, only add to it.>
+
+## Workflow options
+
+```text
+Fast path (no-runtime-change Tickets skip approval before code): off
+```
+
+<Set to `on` only if the owner wants eligible Tickets (core/WORKFLOW.md
+Stage 1, the fast path) to start without approval. Evidence, pre-review,
+Review, and the human's merge still apply.>

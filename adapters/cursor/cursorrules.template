@@ -46,7 +46,9 @@ complete, specific list — this file does not override or weaken it.
 Full source of truth: `<DOCKET_PATH>/core/WORKFLOW.md`. Work moves
 through five phases: **Ticket** (planned and approved before code is
 written) → **Implement** → **Self-review** (record Evidence) → **Review**
-(independent audit of Evidence + diff) → **Done**.
+(independent audit of Evidence + diff) → **Done**. The one exception to
+approval before code is the fast path (`<DOCKET_PATH>/core/WORKFLOW.md`
+Stage 1), off unless the Project Audit turns it on.
 
 **Done is an evidence state:** Evidence recorded; **`docket pre-review`**
 (verify → check-scope → check-evidence) exited 0; Review Pass'd adequacy.
@@ -74,7 +76,8 @@ These are conventions, not tool-enforced gates — Cursor cannot guarantee
 fresh-context Review the way Claude Code's reviewer subagent can.
 
 - In **Ticket**, only produce the Ticket document — no code edits; leave
-  Evidence blank; set **Baseline:** at approval.
+  Evidence blank; set **Baseline:** at approval (or at start, on the fast
+  path).
 - In **Implement**, only touch files listed in the Ticket's Files Touched.
 - In **Self-review**, follow
   `<DOCKET_PATH>/core/recipes/recipe-self-review.md` and pass

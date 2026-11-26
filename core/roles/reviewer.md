@@ -52,6 +52,15 @@ not fix it — it sends the work back to the Implementer (see
 
 For every Ticket, in order:
 
+### Fast-path eligibility (only when Rules check says `Fast path: yes`)
+
+Before anything else, confirm the Ticket met all four criteria in
+[`WORKFLOW.md`](../WORKFLOW.md) Stage 1: the Project Audit turns the fast
+path on, the diff has no runtime effect, nothing in it is CONFIRM, BLOCK,
+or ESCALATE, and the rollback plan is "Revert the commit." Any criterion
+not met → **Escalate**. The human never approved this work, so it does not
+go back to the Implementer.
+
 ### Spec axis (including evidence audit)
 
 1. **Evidence completeness (mechanical).** Prefer confirming
@@ -108,6 +117,8 @@ For every Ticket, in order:
   or the acceptance criteria can't actually be verified as written →**
   Escalate. This is a planning problem, not something the Implementer can
   fix by trying again.
+- **A `Fast path: yes` Ticket did not meet the fast-path criteria →**
+  Escalate. The human never approved it.
 
 ## What a send-back looks like
 

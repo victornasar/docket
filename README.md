@@ -6,7 +6,7 @@ AI agents can make changes quickly and still fail quietly. They report "tests pa
 
 It does this with five plain rules:
 
-1. **Agree on the work first.** Every change starts as a short written Ticket you approve: the problem, the approach, the files it will touch, how to check it, and how to undo it. No code before approval.
+1. **Agree on the work first.** Every change starts as a short written Ticket you approve: the problem, the approach, the files it will touch, how to check it, and how to undo it. No code before approval, unless you turn on the fast path for changes with no runtime effect, such as a docs typo. Those still get evidence, checks, and review.
 2. **Prove it, don't describe it.** The agent records evidence for each acceptance criterion: the command it ran and what happened, not a summary of what it believes.
 3. **Let tools check the evidence.** A small command-line tool runs your project's real test command, records the result tied to the exact state of the code, and confirms the agent stayed within the files it was approved to change.
 4. **Have someone else review.** A separate reviewer, with no memory of writing the code, checks the evidence against the Ticket.
@@ -24,7 +24,7 @@ the plan      within scope   evidence        the evidence    reviewer      holds
 
 | Step | Who | What happens | Moves on when |
 |---|---|---|---|
-| Ticket | Planner (agent) and you | Problem, approach, files touched, acceptance criteria, rollback plan | You approve it |
+| Ticket | Planner (agent) and you | Problem, approach, files touched, acceptance criteria, rollback plan | You approve it (or it qualifies for the fast path) |
 | Implement | Implementer (agent) | Builds exactly what the Ticket describes, touching only its listed files | The approach is done, with no unapproved extra changes |
 | Self-review | Implementer | Records evidence for every acceptance criterion | Evidence is complete |
 | Pre-review | The `docket` tool | Runs three checks in order: the project's test command, the scope check, the evidence check | All three pass on the final code |

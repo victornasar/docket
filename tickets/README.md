@@ -44,13 +44,14 @@ without a Ticket. These Tickets came after it.
 | 012 | [Document `tests:` Evidence in the self-review recipe](012-document-tests-evidence-in-recipe.md) | `core/recipes/recipe-self-review.md` | 009 |
 | 013 | [Keep test output and session baseline out of context](013-cheap-verify-and-baseline.md) | `tooling/`, `core/WORKFLOW.md`, `core/recipes/recipe-self-review.md`, `core/CHANGELOG.md`, `setup/attach.md` | 009 |
 | 014 | [Remove the capability recipes from `core/`](014-remove-capability-recipes.md) | `core/recipes/` (6 deleted), `core/WORKFLOW.md`, `core/roles/*.md`, `core/templates/ticket.template.md`, `core/LINE_MEETING.md`, `core/CHANGELOG.md`, `skills/README.md` | — |
+| 015 | [Let no-runtime-change Tickets skip approval, per project](015-fast-path-approval.md) | `core/WORKFLOW.md`, `core/roles/planner.md`, `core/roles/reviewer.md`, `core/templates/*.md`, `core/LINE_MEETING.md`, `core/CHANGELOG.md`, adapter templates, `README.md`, `GUIDE.md` | — |
 
 ## Deferred — still open
 
-- **Behavioural workflow changes** (grill Q6, Q7): the real checkpoint at
-  Ticket-approval with a trivial-ticket fast path, and the tiered
-  independent Review pass (by risk / size / rules-category). Neither is in
-  `core/WORKFLOW.md` or `core/roles/reviewer.md` yet.
+- **Tiered independent Review** (grill Q7): a lighter Review pass by risk,
+  size, or rules category. Not in `core/WORKFLOW.md` or
+  `core/roles/reviewer.md` yet. (The Q6 fast path at Ticket approval landed
+  in Ticket 015.)
 - **Distribution tooling** (grill Q8, Q12, Q14): vendored-copy
   distribution, `docket sync`, the `attach` script, semver +
   `RELEASES.md`. The gate CLI shipped, but none of these did;

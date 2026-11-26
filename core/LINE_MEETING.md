@@ -52,6 +52,24 @@ making `docket pre-review` the mandatory Self-review → Review handoff, plus
 `review-packet` for fresh-context Review. No new stages/roles. No Evidence
 schema redesign. Spine frozen again after.
 
+### 2026-11-25 — Fast path at Ticket approval (Ticket 015)
+
+**Exception granted** (narrow) by the owner, with no project incident:
+approval before code costs the human a round trip on Tickets where it
+protects almost nothing (no runtime effect), while Evidence, gates, and
+Review still run. Deferred since grill Q6.
+
+**Permitted under this exception only:**
+- The Stage 1 fast path in `WORKFLOW.md`, with eligibility limited to
+  criteria (a)–(d): project opt-in, no runtime effect, nothing CONFIRM /
+  BLOCK / ESCALATE, rollback "Revert the commit"
+- The Reviewer's eligibility check, with Escalate when it fails
+- Matching role, template, adapter, README, and GUIDE text
+
+**Not permitted under this exception:** skipping Evidence, any gate, or
+Review; eligibility beyond (a)–(d); tooling changes; a tiered Review (grill
+Q7). Spine frozen again after.
+
 ---
 
 Any change to `core/` still has to trace to a real incident on real work,

@@ -4,14 +4,14 @@ A hands-on walkthrough you can come back to. It takes two sample issues through 
 
 ## The idea in one paragraph
 
-You agree on the work before any code exists (the Ticket). The agent builds only that, then proves each acceptance criterion with evidence. A small tool checks the evidence is real, current, and in scope. A separate reviewer, who never saw the agent's reasoning, decides whether the evidence is enough. You approve the plan at the start and merge at the end. Nobody has to take the agent's word for anything.
+You agree on the work before any code exists (the Ticket). The agent builds only that, then proves each acceptance criterion with evidence. A small tool checks the evidence is real, current, and in scope. A separate reviewer, who never saw the agent's reasoning, decides whether the evidence is enough. You approve the plan at the start (unless you've turned on the fast path for changes with no runtime effect) and merge at the end. Nobody has to take the agent's word for anything.
 
 ## Who does what
 
 | Role | Who | Does | Never does |
 |---|---|---|---|
 | Planner | Agent | Turns your request into a draft Ticket | Writes code, approves its own Ticket |
-| You | Human | Approve Tickets, answer CONFIRM asks, merge and deploy | Nothing is assumed from your silence |
+| You | Human | Approve Tickets, answer CONFIRM asks, merge and deploy | Nothing is assumed from your silence, except on a fast-path Ticket you turned on |
 | Implementer | Agent | Builds what the Ticket says, records evidence, runs `docket pre-review` | Touches files outside the Ticket, decides it's Done |
 | Reviewer | Separate agent, read-only | Checks evidence and diff against the Ticket: Pass, Send-back, or Escalate | Edits anything, fills in missing evidence itself |
 | `docket` tool | Deterministic | Runs the test command, checks scope and evidence | Judges whether the work is correct |
@@ -37,13 +37,15 @@ Follow [setup/attach.md](setup/attach.md). The parts you should check yourself:
 
 ## Walkthrough 1: the knockout (#12)
 
-Even a typo goes through a Ticket. That's deliberate: the process doesn't depend on the agent judging what's "too small to check". It's also why Docket is attached per project, not everywhere.
+Even a typo goes through a Ticket. That's deliberate: the process doesn't depend on the agent judging what's "too small to check".
+
+What you can skip is approving it first. If the project's `PROJECT_AUDIT.md` turns on the fast path, a Ticket with no runtime effect, nothing under the Rules' CONFIRM/BLOCK/ESCALATE, and "Revert the commit" as rollback starts without waiting for you. A docs typo qualifies. The Planner writes `Fast path: yes` in the Rules check with a reason for each condition, and tells you it's proceeding. Everything after that is the same, and the Reviewer escalates to you if the Ticket didn't actually qualify. Without the fast path:
 
 1. **Ticket.** You ask for the fix. The Planner drafts `tickets/012-fix-readme-typo.md`:
    - Files touched: `README.md`
    - AC-1: The Quick start command reads `python -m shelf` and starts the app. (command)
    - Rollback plan: Revert the commit.
-2. **Approve.** You read it and say yes.
+2. **Approve.** You read it and say yes. (On the fast path, skip this step: the Planner tells you it's proceeding.)
 3. **Implement.** The Implementer records `Baseline:` (the current commit), sets Status `in-progress`, and fixes the word.
 4. **Self-review.** It runs `python -m shelf` and records that as AC-1's evidence (`method: command`), then runs `docket pre-review`. The project's test suite runs too, even for a docs change. Pre-review passes.
 5. **Review.** The Reviewer reads the Ticket and the one-line diff: Pass.

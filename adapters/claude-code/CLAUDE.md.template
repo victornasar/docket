@@ -31,7 +31,8 @@ don't rely on this summary for the actual rules.
 See `<DOCKET_PATH>/core/WORKFLOW.md` for the full workflow. In short:
 Ticket (planned and approved before code is written) → Implement → Self-review
 (record Evidence) → Review (independent read-only audit of Evidence + diff)
-→ Done. No code is written before a Ticket is approved.
+→ Done. No code is written before a Ticket is approved, except fast-path
+Tickets (WORKFLOW.md Stage 1; off unless the Project Audit turns it on).
 
 **Done is an evidence state:** every acceptance criterion has recorded
 Evidence; **`docket pre-review`** (verify → check-scope → check-evidence)

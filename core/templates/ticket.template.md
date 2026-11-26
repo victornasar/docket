@@ -63,7 +63,11 @@ migration case.>
 
 <Confirm the approach above doesn't require anything RULES.md marks BLOCK.
 Note anything that will need a CONFIRM step during implementation, so it
-isn't a surprise mid-Ticket.>
+isn't a surprise mid-Ticket. To use the fast path (core/WORKFLOW.md Stage
+1), add a line `Fast path: yes` with one reason for each criterion:
+(a) Project Audit turns it on, (b) no runtime effect, (c) nothing CONFIRM,
+BLOCK, or ESCALATE, (d) rollback is "Revert the commit." Leave it out
+otherwise.>
 
 ## Evidence
 

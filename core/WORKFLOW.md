@@ -59,6 +59,25 @@ Audit's Verification commands.
   escalated to the human before a Ticket is even written.
 - The human has approved the Ticket. **No code is written before this.**
 
+**The fast path: the one exception to approval before code.** A Ticket may
+go from `draft` straight to `in-progress`, without `approved`, only when
+all four hold:
+
+- (a) the project has turned the fast path on in its Project Audit
+  (`## Workflow options`; off by default);
+- (b) the change has no runtime effect: docs, comments, or content nothing
+  executes or reads at runtime;
+- (c) nothing in the approach is CONFIRM, BLOCK, or ESCALATE under
+  [`RULES.md`](RULES.md);
+- (d) the rollback plan is "Revert the commit."
+
+If any of these is unclear, the Ticket is not eligible and waits for
+approval. The Planner declares the fast path in the Ticket's Rules check
+(see [`planner.md`](roles/planner.md)) and tells the human it is
+proceeding, so the human can stop it. Everything else is unchanged: the
+Ticket, Baseline, Evidence, `docket pre-review`, the independent Review,
+and the human's merge decision.
+
 ## Stage 2 — Implement
 
 **Owner:** Implementer.
@@ -160,6 +179,11 @@ rather than silently treating a same-context role-switch as equivalent —
 see each adapter's own notes on this (Claude Code's is closest to the real
 thing; Cursor's is a weaker approximation, documented as such).
 
+**Fast-path Tickets:** the Reviewer first checks that a Ticket declaring
+`Fast path: yes` met all four criteria in Stage 1. If it did not, the
+outcome is **Escalate**: the human never approved the work, so there is
+nothing for the Implementer to fix.
+
 **Possible outcomes:**
 
 1. **Pass** — every acceptance criterion is met with adequate evidence,
@@ -173,8 +197,9 @@ thing; Cursor's is a weaker approximation, documented as such).
    goes back to Stage 2 (Implement) with that feedback attached.
 3. **Escalate** — a Rules violation was found (see [`RULES.md`](RULES.md)
    §7), the Ticket itself turns out to be wrong or ambiguous in a way no
-   amount of re-implementation fixes, or the retry limit below has been
-   hit. Goes to the human, not back to the Implementer.
+   amount of re-implementation fixes, a fast-path Ticket was not eligible,
+   or the retry limit below has been hit. Goes to the human, not back to
+   the Implementer.
 
 ### Loopback policy (send-back retry limit)
 
@@ -249,7 +274,7 @@ size.
 
 | Stage | Owner | Produces | Exit gate |
 |---|---|---|---|
-| Ticket | Planner | Approved Ticket (Evidence blank) | Human approval |
+| Ticket | Planner | Approved Ticket (Evidence blank) | Human approval, or fast path (eligible Tickets only) |
 | Implement | Implementer | Implementation | Matches Ticket scope |
 | Self-review | Implementer | Diff + completed Evidence | `docket pre-review` exit 0 (final state) |
 | Review | Reviewer | Pass / Send-back / Escalate | Evidence audited; AC adequacy judged |

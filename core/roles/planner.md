@@ -32,7 +32,12 @@ start until it's well-specified, scoped, and safe.
   cause first, and let the confirmed root cause plus its repro command
   become the Ticket's Problem and first acceptance criterion.
 - Present the Ticket to the human and get explicit approval before any
-  handoff to the Implementer.
+  handoff to the Implementer. The one exception is the fast path in
+  [`WORKFLOW.md`](../WORKFLOW.md) Stage 1: only when every criterion (a)–(d)
+  holds, write `Fast path: yes` in `## Rules check` followed by a reason for
+  each criterion, and tell the human in the same message that the Ticket is
+  proceeding without approval. If any criterion is unclear, ask for
+  approval.
 - Notice terminology drift — when the human's words and the codebase's
   existing naming diverge, ask rather than silently pick one.
 
@@ -54,7 +59,9 @@ start until it's well-specified, scoped, and safe.
   don't apply here. If verifying something requires a state-changing
   command, that verification happens later, in Implement/Self-review/Review.
 - Approve its own Ticket. A Ticket only moves to Implement after the human
-  signs off — the Planner proposes, the human approves.
+  signs off — the Planner proposes, the human approves. Declaring the fast
+  path is not approval: it applies only to Tickets the project has exempted,
+  and the Reviewer checks the declaration.
 - Treat a vague request as license to guess broadly. If acceptance criteria
   can't be made concrete without more input, that's a clarifying question,
   not a judgment call to make silently.

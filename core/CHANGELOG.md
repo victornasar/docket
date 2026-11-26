@@ -19,6 +19,33 @@ Newest first.
 
 ---
 
+## 2026-11-25 — Fast path at Ticket approval (Ticket 015)
+
+**Triggering project:** none. Owner freeze exception, recorded in
+`LINE_MEETING.md`.
+
+**What happened:** every Ticket, including a one-word docs fix, needed the
+human's approval before any code. On no-runtime-change work that approval
+protects almost nothing that Evidence, `pre-review`, the independent
+Review, and the human's merge don't already cover, and it costs the human
+a round trip each time.
+
+**Fix:** a project can turn on a fast path in its Project Audit (off by
+default). A Ticket qualifies only when the project opted in, the change
+has no runtime effect, nothing in it is CONFIRM/BLOCK/ESCALATE, and the
+rollback is "Revert the commit." The Planner declares it in Rules check
+with a reason per criterion and tells the human. The Reviewer checks
+eligibility first and escalates when it fails. Nothing else in the
+workflow changes.
+
+**Files changed:** `core/WORKFLOW.md`, `core/roles/planner.md`,
+`core/roles/reviewer.md`, `core/templates/project-audit.template.md`,
+`core/templates/ticket.template.md`, `core/LINE_MEETING.md`, this
+changelog, `adapters/claude-code/CLAUDE.md.template`,
+`adapters/cursor/cursorrules.template`, `README.md`, `GUIDE.md`.
+
+---
+
 ## 2026-11-25 — Remove the capability recipes (Ticket 014)
 
 **Triggering project:** none. A subtraction, logged as `LINE_MEETING.md`
